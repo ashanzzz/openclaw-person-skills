@@ -20,6 +20,7 @@
 - `labor_law_score`: high | medium | low
 - `fit_score`: 0-100
 - `fit_reason`: 评分理由
+- `search_plan`: targeted_pool | expanded_pool
 - `bucket`: apply_now | watchlist | verify_needed
 
 ## 强制门槛
