@@ -1,0 +1,28 @@
+# MEMORY.md
+
+- Preference: memory management should be assistant-led; proactively store decisions, preferences, and ongoing work state without user prompting.
+- 事实检索规则（高优先级）：凡用户要求“帮我找/搜索/确认”的信息，默认必须基于当下可验证现实（实时可核验来源）；禁止用历史记忆充当当前事实。仅当用户明确要求“按过去某个时间点”时，才切换历史视角。
+- 官方依赖强规则（高优先级）：当用户提到“根据官方/官方文档/更新日志/搜索”或问题属于高时效高依赖领域，必须先联网核验官方来源（官网文档、官方仓库、官方发布）再答复；本地文档仅作辅助，不得单独作为最终依据。
+- 附件交付偏好（高优先级）：当用户明确索要“附件”，应通过当前聊天渠道直接发送文件（如 Telegram `message` 工具发送），而不是仅提供本地路径让用户自行查找。
+- Preference: be smart and nimble in what gets remembered; minimize user overhead.
+- 对话记忆偏好（高优先级）：优先记住并持续追踪我们真实对话中的上下文与决策链；画像/标签只是统计方法，不应替代原始对话语义。
+- Durable reminder: ongoing memory/index growth and incremental reindexing are normal maintenance, not unfinished work.
+- ERPNext invoice baseline (high priority):
+  - Attachment-first entry only; no attachment => report missing and stop.
+  - `ERP grand_total` must exactly match PDF `价税合计` before submit.
+  - New material/supplier creation requires explicit user authorization.
+  - Default to ERP master data mapping (`item_code`, unit, spec/model), avoid arbitrary free-text items.
+  - Summary/remarks naming uses `YYYY年MM月+费用类型`.
+- Workflow preference: for "learn this" requests, research online + official docs first, then act.
+- Session continuity preference: assistant proactively curates memory and should resume ERP cleanup context without re-asking basics.
+- Core indexing rule (must keep): include entire `skills/` in memorySearch extraPaths so all current/future expert skills are automatically covered by dynamic incremental indexing.
+
+- 搜索优先级（长期规则）：优先使用本地 SearXNG（http://192.168.8.11:6001）；涉及多观点交叉时优先补充维基百科；通用检索再使用 Google 等传统搜索引擎。
+- 数据库环境（长期）：Qdrant `http://192.168.8.11:6333`；pgvector(PostgreSQL) `192.168.8.19:5432`，DB/User/Pass 均为 `openclaw`（用户再次确认：2026-03-02）。
+- 多Agent记忆策略（关键）：目标不是所有 agent 拥有完全相同记忆，而是每个专家 agent 都具备强记忆；由网关/总控 agent `zero` 负责跨专家记忆质检与提醒。当专家出现遗忘或上下文断裂时，`zero` 必须补充关键上下文并触发返工校正。
+- 一体化专家规则（用户确认）：管理专家/工厂专家/商业专家合并为同一个 agent（`factory-operations-expert`），统一负责商业+工厂+管理问题；ERP系统具体执行仍由 `erpnext-expert` 负责。
+- 新增专家规则（用户确认）：建立 `unraid-expert`，覆盖 Unraid 系统、脚本、内网穿透（含 chmlfrp）等全部相关任务；出现异常先汇报 Zero，Zero 质检后再对用户输出。
+- 新闻情报规则（高优先级）：新闻播报/真实情报汇总由专门 `news-agent` 执行；Zero 不直接产出原始新闻分析，只负责调度、汇总、证据核验、拦截无效数据并要求返工。
+- 运行模式（长期）：启用 CEO Mode 作为Zero默认运行规则，优先级最高；目标驱动、总控调度、质量门控、返工闭环，防遗忘与防跑偏。
+- 管理专家首要书单（用户指定先记住）：`《高产出管理》`、`《目标》`、`《丰田之道》`。管理类回答优先对齐这三本的原则框架。- 职业发展检索硬规则（高优先级）：岗位检索前必须先读 `secure/career-db/profile_user.md`、`secure/career-db/profile_girlfriend.md`、`secure/career-db/career_jobs.sqlite`、`secure/career-db/README.md`；未检索上述文件不得输出岗位结论。
+- 数据持久化规则（高优先级）：公司与岗位必须写入数据库 `secure/career-db/career_jobs.sqlite`（companies/jobs/search_runs），并维护女朋友适配字段 `fit_for_girlfriend` 与 `fit_reason`。
