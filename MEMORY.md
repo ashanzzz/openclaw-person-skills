@@ -5,6 +5,11 @@
 - 官方依赖强规则（高优先级）：当用户提到“根据官方/官方文档/更新日志/搜索”或问题属于高时效高依赖领域，必须先联网核验官方来源（官网文档、官方仓库、官方发布）再答复；本地文档仅作辅助，不得单独作为最终依据。
 - 附件交付偏好（高优先级）：当用户明确索要“附件”，应通过当前聊天渠道直接发送文件（如 Telegram `message` 工具发送），而不是仅提供本地路径让用户自行查找。
 - Preference: be smart and nimble in what gets remembered; minimize user overhead.
+- 执行优先级（高优先级）：1）先把任务做完/达成目标；2）在不牺牲完成度与正确性的前提下，尽量减少往返沟通。
+- 新增偏好（2026-03-04）：Zero 需要随进展定期复盘“需求/约束是否变化”，必要时主动建议调整其它 agent 或 Zero 的行为方式以更贴合用户。
+- 用户关注重点（2026-03-04）：更看重 RAG/知识库与记忆能力；多 agent 主要服务于并行与知识沉淀，而非形式本身。
+- Agent 生命周期规则（2026-03-04）：长时间不活跃的专家（约 2 个月无实际使用/无会话更新）应删除（从 openclaw.json 移除，并清理对应 workspace/agentDir），以保持体系精简。删除前默认先给出候选清单供用户确认（除非用户明确要求自动执行）。
+- A2A 循环防护（2026-03-04）：Zero 与专家 agent 为确认问题允许多轮沟通，但每个 job 的 A2A 往返上限约 30 条消息；当 Zero 判断已满足验收时必须发出 `DONE` 并停止继续追问/回复该 agent（除非开启新 job_id）。优先用“一次性结构化澄清问题清单 + 状态协议(ACK/PROGRESS/DONE)”减少往返。
 - 对话记忆偏好（高优先级）：优先记住并持续追踪我们真实对话中的上下文与决策链；画像/标签只是统计方法，不应替代原始对话语义。
 - Durable reminder: ongoing memory/index growth and incremental reindexing are normal maintenance, not unfinished work.
 - ERPNext invoice baseline (high priority):
@@ -26,3 +31,4 @@
 - 运行模式（长期）：启用 CEO Mode 作为Zero默认运行规则，优先级最高；目标驱动、总控调度、质量门控、返工闭环，防遗忘与防跑偏。
 - 管理专家首要书单（用户指定先记住）：`《高产出管理》`、`《目标》`、`《丰田之道》`。管理类回答优先对齐这三本的原则框架。- 职业发展检索硬规则（高优先级）：岗位检索前必须先读 `secure/career-db/profile_user.md`、`secure/career-db/profile_girlfriend.md`、`secure/career-db/career_jobs.sqlite`、`secure/career-db/README.md`；未检索上述文件不得输出岗位结论。
 - 数据持久化规则（高优先级）：公司与岗位必须写入数据库 `secure/career-db/career_jobs.sqlite`（companies/jobs/search_runs），并维护女朋友适配字段 `fit_for_girlfriend` 与 `fit_reason`。
+- A2A治理规则（高优先级）：若任意两个 agent 直接私聊（非 Zero 发起），必须在对用户交付前回写 `agent:zero:main` 一条摘要；否则不得标注为“联合提供”。
