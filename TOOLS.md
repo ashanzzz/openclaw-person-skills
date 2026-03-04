@@ -41,6 +41,12 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 - Scope: LAN only
 - Notes: User authorized agent to adjust SearXNG settings as needed for research workflow.
 
+## Network / Proxy (local)
+
+- Current container env (observed 2026-03-05):
+  - `HTTP_PROXY` / `HTTPS_PROXY` → `http://192.168.8.30:7893` (when this proxy is down, `web_fetch`/browser outbound fails or stalls; direct internet works if these env vars are unset).
+  - Quick bypass test: `env -u HTTP_PROXY -u HTTPS_PROXY curl -I https://example.com`
+
 ### Multi-Channel Search (Default Hard Rule)
 
 For all search/research/job-hunt tasks, run channels in parallel by default:
