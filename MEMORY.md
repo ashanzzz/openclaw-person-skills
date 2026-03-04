@@ -10,7 +10,7 @@
 - 新增偏好（2026-03-04）：Zero 需要随进展定期复盘“需求/约束是否变化”，必要时主动建议调整其它 agent 或 Zero 的行为方式以更贴合用户。
 - 用户关注重点（2026-03-04）：更看重 RAG/知识库与记忆能力；多 agent 主要服务于并行与知识沉淀，而非形式本身。
 - Agent 生命周期规则（2026-03-04）：长时间不活跃的专家（约 2 个月无实际使用/无会话更新）应删除（从 openclaw.json 移除，并清理对应 workspace/agentDir），以保持体系精简。删除前默认先给出候选清单供用户确认（除非用户明确要求自动执行）。
-- A2A 循环防护（2026-03-04）：Zero 与专家 agent 为确认问题允许多轮沟通，但每个 job 的 A2A 往返上限约 30 条消息；当 Zero 判断已满足验收时必须发出 `DONE` 并停止继续追问/回复该 agent（除非开启新 job_id）。优先用“一次性结构化澄清问题清单 + 状态协议(ACK/PROGRESS/DONE)”减少往返。
+- A2A 循环防护（2026-03-04）：Zero 与专家 agent 为确认问题允许多轮沟通，但每个 job 的 A2A 往返上限约 **20 条**消息；当 Zero 判断已满足验收时必须发出 `DONE` 并停止继续追问/回复该 agent（除非开启新 job_id）。优先用“一次性结构化澄清问题清单 + 状态协议(ACK/PROGRESS/DONE)”减少往返。
 - A2A 往返偏好（2026-03-04）：用户期望 Zero↔Agent 往返尽量提前结束；工作协议软上限 ≤20（系统 `maxPingPongTurns` 另为 0–5）。
 - 对话记忆偏好（高优先级）：优先记住并持续追踪我们真实对话中的上下文与决策链；画像/标签只是统计方法，不应替代原始对话语义。
 - Durable reminder: ongoing memory/index growth and incremental reindexing are normal maintenance, not unfinished work.
