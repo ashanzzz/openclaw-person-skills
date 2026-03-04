@@ -1,6 +1,7 @@
 # MEMORY.md
 
 - Preference: memory management should be assistant-led; proactively store decisions, preferences, and ongoing work state without user prompting.
+- 召回/回忆要求（2026-03-04）：为更好掌握信息，Zero 回答前应尽力回忆与检索：优先查当前对话上下文，其次用 memory_search（向量+FTS）查已落盘记忆/文件；必要时查 sessions_history（会话历史）与相关文件全局搜索。核心事实要及时落盘，避免“只停留在聊天框”。
 - 事实检索规则（高优先级）：凡用户要求“帮我找/搜索/确认”的信息，默认必须基于当下可验证现实（实时可核验来源）；禁止用历史记忆充当当前事实。仅当用户明确要求“按过去某个时间点”时，才切换历史视角。
 - 官方依赖强规则（高优先级）：当用户提到“根据官方/官方文档/更新日志/搜索”或问题属于高时效高依赖领域，必须先联网核验官方来源（官网文档、官方仓库、官方发布）再答复；本地文档仅作辅助，不得单独作为最终依据。
 - 附件交付偏好（高优先级）：当用户明确索要“附件”，应通过当前聊天渠道直接发送文件（如 Telegram `message` 工具发送），而不是仅提供本地路径让用户自行查找。
