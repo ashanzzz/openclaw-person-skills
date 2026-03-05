@@ -1,5 +1,18 @@
 {
   "version": 1,
   "notes": "ETA 进度守卫使用：有明确截止/预计时间的任务放这里，Heartbeat 会到点提醒与回报。",
-  "tasks": []
+  "tasks": [
+    {
+      "job_id": "career-prep-20260306-0035",
+      "created_at": 1772730210,
+      "eta_at": 1772732310,
+      "next_update_at": 1772731110,
+      "owner": "zero",
+      "source": "A2A china-career-agent",
+      "status": "done",
+      "notes": "deliver prep checklist report <=2000字 + filename suggestions | delivered by china-career-agent; integrated by zero",
+      "done_at": 1772732410
+    }
+  ],
+  "updated_at": 1772732410
 }
