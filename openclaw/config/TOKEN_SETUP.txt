@@ -1,0 +1,41 @@
+OpenClaw Token 配置固化（请在服务器上操作，不要在聊天里发 token）
+
+目标
+- 把常用 token 统一放到一个“可持久化”的位置，避免散落在 openclaw.json / ~/.config / 聊天记录里。
+- 推荐使用 OpenClaw 自带的 .env 加载能力：~/.openclaw/.env （容器内路径）
+  - OpenClaw 会自动读取：CWD .env + ~/.openclaw/.env（不会覆盖已存在的同名环境变量）。
+
+你需要做什么（最短步骤）
+1) 复制模板文件：
+   cp /root/.openclaw/workspace/openclaw/config/tokens.env.template /root/.openclaw/.env
+
+2) 编辑 /root/.openclaw/.env，把 token 填进去（不要加引号，注意不要留空格）：
+   nano /root/.openclaw/.env
+
+3) 重启 OpenClaw Gateway/容器，使环境变量加载生效。
+
+模板变量说明（按需填写）
+- GH_TOKEN
+  用途：GitHub CLI / gh-issues skill / PR 自动化。
+
+- TELEGRAM_BOT_TOKEN
+  用途：Telegram 通道 token（默认账号的 env fallback）。
+  说明：也可以写进 openclaw.json 的 channels.telegram.botToken，但更建议放 env。
+
+- CLAWHUB_TOKEN（可选）
+  用途：ClawHub CLI 登录。
+  说明：ClawHub token 默认存储在 /root/.config/clawhub/config.json。
+        若你不映射 /root/.config，可用：
+        CLAWHUB_CONFIG_PATH=/root/.openclaw/secure/clawhub-config.json
+        然后执行：clawhub login --token "$CLAWHUB_TOKEN" --no-browser
+
+- AIAPI_BASE_URL / AIAPI_API_KEY（可选）
+  用途：newapi/aiapi 的 baseUrl 与 apiKey。
+  说明：当前 openclaw.json 里 models.providers.aiapi.apiKey 可能是明文；建议后续改为引用 env，避免落盘明文。
+
+安全建议（强烈）
+- 不要把 token 发到聊天里。
+- 不要把 token 提交到 Git。
+- 如 token 曾在聊天/截图/日志中出现：立即撤销并重新生成。
+
+(由 Zero 固化：openclaw/config/tokens.env.template 为模板文件)
