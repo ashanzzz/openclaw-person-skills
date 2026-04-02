@@ -93,7 +93,7 @@ serial = (datetime.strptime("2026-03-31", "%Y-%m-%d") - datetime(1899, 12, 30)).
 ```python
 # 查询公司某月所有已提交 Purchase Invoice
 filters = [
-    ["company", "=", "天津吉众科技有限公司"],
+    ["company", "=", "{{公司名}}"],
     ["posting_date", "between", ["2026-03-01", "2026-03-31"]]
 ]
 fields = ["name","posting_date","supplier","supplier_name","bill_no","bill_date","grand_total","outstanding_amount","docstatus"]
@@ -129,7 +129,7 @@ curl -s -X POST "https://api.telegram.org/bot<TOKEN>/sendDocument" \
 
 - 导出保存路径：`secure/erpnext/exports/{公司名}/{月份}/`
 - 文件名格式：`{公司简称}_{月份}_发票明细.xlsx`
-  - 例如：`祺富_2026-03_发票明细.xlsx`、`吉众_2026-03_发票明细.xlsx`
+  - 例如：`{{公司简称B}}_2026-03_发票明细.xlsx`、`{{公司简称A}}_2026-03_发票明细.xlsx`
 
 ## 重要规则
 
@@ -150,3 +150,4 @@ ERPNext API 中 doctype 含空格（如 `Purchase Invoice`），必须用 `urlli
 ## 模板文件
 
 参考模板：`scripts/invoice_detail_template.xlsx`
+
