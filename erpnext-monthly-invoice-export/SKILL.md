@@ -151,15 +151,15 @@ python3 skills/erpnext-monthly-invoice-export/scripts/export_erpnext_invoices.py
   - `summary_<doctype>_<month>.md`
   - `no_invoice_<doctype>_<month>.csv`（无票支出：bill_no 为空/0/全0）
 
-## 发票台账输出格式（调用 jizhong-purchase-classifier）
+## 发票台账输出格式（调用 purchase-invoice-classifier）
 
-完成 export 后，调用 `jizhong-purchase-classifier` skill 做四级分类输出：
+完成 export 后，调用 `purchase-invoice-classifier` skill 做四级分类输出：
 
 **分类（四级）**：电汇 / 现金 / 无发票 / 未付款
 **格式**：每行一个物料明细（不是按发票汇总）
 **字段**：凭证号 / 发票号码 / 日期 / 供应商 / 物料名称 / 规格型号 / 备注 / 数量 / 金额
 
-详见 `skills/jizhong-purchase-classifier/SKILL.md`
+详见 `skills/purchase-invoice-classifier/SKILL.md`
 
 ## Troubleshooting
 - HTTP 401：token 失效 → 重新生成并更新 `ERP_API_TOKEN`
