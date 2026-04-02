@@ -1,18 +1,18 @@
 ---
 name: erpnext-monthly-invoice-export
 version: 2.0.0
-description: Export/download ERPNext invoices for a given company + month (e.g., 【公司简称A】 2026年1月), including unpaid. Uses ERPNext REST API token from secure/api-fillin.env, saves CSV/JSON/summary under secure/erpnext/exports/. Also serves as the master reference for 阿山's ERPNext operational habits.
+description: Export/download ERPNext invoices for a given company + month (e.g., {{公司简称A}} 2026年1月), including unpaid. Uses ERPNext REST API token from secure/api-fillin.env, saves CSV/JSON/summary under secure/erpnext/exports/. Also serves as the master reference for 阿山's ERPNext operational habits.
 ---
 
 # ERPNext 全操作规范（阿山专用）
 
 ## 账户与权限（重要）
 
-- **单一账户同时拥有【公司简称A】和【公司简称B】两家公司权限**，无需分开认证
+- **单一账户同时拥有{{公司简称A}}和{{公司简称B}}两家公司权限**，无需分开认证
 - 查/创建单据时用 `company` 字段区分公司
 - 公司精确名称（从 ERPNext UI 复制）：
-  - 【公司简称A】：`【公司名】`
-  - 【公司简称B】：`【公司名】`
+  - {{公司简称A}}：`{{公司名}}`
+  - {{公司简称B}}：`{{公司名}}`
 
 ## API 基础
 
@@ -45,7 +45,7 @@ description: Export/download ERPNext invoices for a given company + month (e.g.,
 - `posting_date` — 业务日期
 - `reference_date` — 银行交易日期
 - `reference_no` — 银行流水号（无则填"自动调整"）
-- `mode_of_payment` — 付款方式（【公司简称A】常用：`电汇`）
+- `mode_of_payment` — 付款方式（{{公司简称A}}常用：`电汇`）
 
 其他可查的 mode_of_payment：`支票`、`信用卡`、`银行汇票`、`现金`、`电汇`
 
@@ -109,7 +109,7 @@ curl -X PUT "${ERP_BASE_URL}/api/resource/Payment%20Entry/ACC-PAY-2026-00132" \
 
 ```bash
 # 查某公司某月所有采购发票
-GET /api/resource/Purchase%20Invoice?filters=[["company","=","【公司名】"],["posting_date","between",["2026-02-01","2026-02-28"]]]
+GET /api/resource/Purchase%20Invoice?filters=[["company","=","{{公司名}}"],["posting_date","between",["2026-02-01","2026-02-28"]]]
 
 # 查草稿状态单据
 GET /api/resource/Purchase%20Invoice?filters=[["docstatus","=",0]]
@@ -125,7 +125,7 @@ GET /api/resource/Purchase%20Invoice?filters=[["docstatus","=",0]]
 # 月度发票导出（子模块）
 
 ## When to use
-- 用户说：下载/导出 ERPNext 某公司（如"【公司简称A】"）某个月（如 2026-01）的**发票/单据**，**未付款也要**，并要求"记录好、保存好、可复用"。
+- 用户说：下载/导出 ERPNext 某公司（如"{{公司简称A}}"）某个月（如 2026-01）的**发票/单据**，**未付款也要**，并要求"记录好、保存好、可复用"。
 
 默认口径：**Purchase Invoice（采购发票）**；如用户要销售发票则改为 **Sales Invoice**。
 
@@ -139,7 +139,7 @@ GET /api/resource/Purchase%20Invoice?filters=[["docstatus","=",0]]
 ```bash
 python3 skills/erpnext-monthly-invoice-export/scripts/export_erpnext_invoices.py \
   --month 2026-01 \
-  --company "【公司简称A】" \
+  --company "{{公司简称A}}" \
   --doctype "Purchase Invoice"
 ```
 
@@ -151,7 +151,16 @@ python3 skills/erpnext-monthly-invoice-export/scripts/export_erpnext_invoices.py
   - `summary_<doctype>_<month>.md`
   - `no_invoice_<doctype>_<month>.csv`（无票支出：bill_no 为空/0/全0）
 
+## 发票台账输出格式（调用 jizhong-purchase-classifier）
+
+完成 export 后，调用 `jizhong-purchase-classifier` skill 做四级分类输出：
+
+**分类（四级）**：电汇 / 现金 / 无发票 / 未付款
+**格式**：每行一个物料明细（不是按发票汇总）
+**字段**：凭证号 / 发票号码 / 日期 / 供应商 / 物料名称 / 规格型号 / 备注 / 数量 / 金额
+
+详见 `skills/jizhong-purchase-classifier/SKILL.md`
+
 ## Troubleshooting
 - HTTP 401：token 失效 → 重新生成并更新 `ERP_API_TOKEN`
 - 公司名不匹配：从 ERPNext UI 复制精确值
-
