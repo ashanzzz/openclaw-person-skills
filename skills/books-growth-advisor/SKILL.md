@@ -1,62 +1,133 @@
 ---
 name: books-growth-advisor
-description: Synthesize guidance from 9 management classics for questions about career growth, factory operations, team management, and interpersonal communication. Use when the user asks what to do next, how to decide, how to improve work outcomes, or how to handle people and leadership issues.
+description: Unified advice master — personal development, company operations, and business strategy grounded in 11 management classics. Use when asking what to do, how to decide, how to improve work outcomes, or how to handle people and leadership.
 ---
 
-# Books Growth Advisor
+# Books Growth Advisor — 建议大师
 
-Use this skill to provide actionable advice grounded in 9-book management knowledge.
+个人发展 · 公司运营 · 商业决策，一套框架解决。
 
-## Core policy
+## 定位
 
-1. Diagnose the question into one of four lanes:
-   - Career development
-   - Factory/operations improvement
-   - Team/management systems
-   - Interpersonal communication
-2. Pull 2-4 relevant frameworks from bundled references.
-3. Output a practical mini-SOP:
-   - Situation diagnosis
-   - First 3 actions (today / this week / this month)
-   - Risks and anti-patterns
-4. Speak as synthesized understanding, not long quote dumps.
+当用户问"我该怎么办"、"如何提升"、"怎么决策"时，调取此技能。
 
-## Knowledge base (9 books)
+基于 **11 本管理经典**，输出可执行方案（今天/本周/本月），不说废话。
 
-- 驱动力
-- 人性的弱点
-- 格鲁夫给经理人的第一课
-- 第五项修炼
-- 管理的常识
-- 精益思想
-- 领导梯队
-- 丰田模式
-- 高效能人士的七个习惯
+---
 
-## Reference-first rule
+## 核心政策
 
-Primary source is this skill’s bundled references:
-- `references/factory-operations/*`
-- `references/management/*`
-- `references/personal-development/*`
-- `references/book-map.md`
+1. **判断问题域** → 个人发展 / 公司运营 / 商业决策（可重叠）
+2. **调取相关框架** → 从 references/ 中选 2-4 本书的核心章节
+3. **输出结构化建议** → 判断本质 → 核心原则 → 3步行动 → 检查点 → 常见误区
+4. **综合整合** → 不摘抄原文，用自己的话说
 
-(Optional) If a local runtime note base exists, it can be used only for extra verification.
+---
 
-## Question routing
+## 知识库（11本书）
 
-- Career confusion / growth path → leadership-pipeline + 7habits + drive
-- Factory bottleneck / delivery / waste → goal-toc + lean-thinking + toyota-way
-- Manager productivity / delegation / meetings → high-output-management
-- Team learning / recurring complex issues → fifth-discipline
-- Communication / trust / persuasion → how-to-win-friends + 7habits
+### 个人发展（4本）
 
-## Output template
+| 书名 | 作者 | 核心贡献 |
+|------|------|---------|
+| 高效能人士的七个习惯 | 史蒂芬·柯维 | 积极主动/以终为始/要事第一/双赢/知彼/综效/不断更新 |
+| 人性的弱点 | 戴尔·卡耐基 | 不批评/真诚赞美/满足需求/说服他人 |
+| 驱动力 | 丹尼尔·平克 | 自主/专精/使命（3大内在动机） |
+| 如何赢得友谊并影响他人 | 卡耐基 | 人际交往的底层原则 |
 
-1. **判断**：问题本质（1-2句）
-2. **框架**：使用了哪些原则
-3. **行动**：3步行动（今天/本周/本月）
-4. **检查点**：1周后如何判断有效
-5. **风险**：最容易踩的2个坑
+### 公司运营（4本）
 
-Keep recommendations concrete, operational, and decision-oriented.
+| 书名 | 作者 | 核心贡献 |
+|------|------|---------|
+| 精益思想 | 沃麦克 & 琼斯 | 消除浪费/价值流/拉动/持续改善 |
+| 丰田模式 | 杰弗瑞·莱克 | 精益14原则/A3思维/Gemba/改善文化 |
+| 目标 | 高德拉特 | TOC约束理论/聚焦少数关键杠杆 |
+| 格鲁夫给经理人的第一课 | 安迪·格鲁夫 | 经理人的产出管理/例行工作/指标 |
+
+### 商业决策（3本）
+
+| 书名 | 作者 | 核心贡献 |
+|------|------|---------|
+| 高产出管理 | 安迪·格鲁夫 | 产能与产出平衡/A型杠杆活动/部属培育 |
+| 领导梯队 | 拉姆·查兰 | 六阶段领导力模型/从管理自己到管理思想 |
+| 第五项修炼 | 彼得·圣吉 | 系统思考/心智模式/团队学习/共同愿景 |
+
+### 额外补充（扩展库）
+
+| 书名 | 用途 |
+|------|------|
+| 绝对坦率 | 直接反馈 + 个体关怀的平衡框架 |
+| 管理的常识 | 管理基础概念速查 |
+
+---
+
+## Reference 文件索引
+
+```
+references/
+├── book-map.md              # 全局主题→书籍映射（第一个读）
+├── book-weakness.md         # 人性的弱点
+├── book-7-habits.md         # 高效能人士的七个习惯
+├── book-drive.md            # 驱动力
+├── book-how-to-win-friends.md # 如何赢得友谊并影响他人
+├── book-lean.md             # 精益思想
+├── book-toyota.md           # 丰田模式
+├── book-goal.md             # 目标（TOC）
+├── book-grove.md            # 格鲁夫给经理人的第一课
+├── book-high-output.md      # 高产出管理
+├── book-leadership-pipeline.md # 领导梯队
+├── book-fifth-discipline.md # 第五项修炼
+├── book-radical-candor.md   # 绝对坦率
+├── book-management-basics.md # 管理的常识
+└── 7habits-framework.md     # 七习惯速查框架
+```
+
+---
+
+## 问题路由规则
+
+| 问题类型 | 优先调取 |
+|---------|---------|
+| 个人成长/方向感/职场晋升 | 七习惯 + 领导梯队 + 驱动力 |
+| 工厂效率/交期/瓶颈/浪费 | 目标(TOC) + 精益 + 丰田模式 |
+| 经理效能/授权/会议/部属 | 高产出管理 + 格鲁夫 |
+| 沟通/信任/说服/人际冲突 | 人性的弱点 + 如何赢得友谊 |
+| 团队学习/复杂系统/组织变革 | 第五项修炼 |
+| 直接反馈/团队文化/管理风格 | 绝对坦率 |
+| 战略决策/授权/组织架构 | 领导梯队 + 管理的常识 |
+
+---
+
+## 输出模板（固定格式）
+
+```
+【判断】问题本质（1-2句）
+
+【框架】用了哪本书的哪些原则（2-4条）
+
+【行动】
+- 今天：
+- 本周：
+- 本月：
+
+【检查点】1-2个可验证结果
+
+【常见误区】最容易踩的2个坑
+```
+
+---
+
+## 交互规则
+
+- 不引用原文，不说"根据某书第X页"
+- 用自己的话说，假设对方没读过这些书
+- 遇到具体情境时给出具体选择，不给模糊建议
+- 涉及政策/法规/最新市场数据 → 先查官方资料再回答
+
+---
+
+## 扩展知识（本地优先）
+
+如需更深入特定主题，可同时读取：
+- `~/proactivity/memory.md`（个人偏好与行动边界）
+- `~/self-improving/memory.md`（历史教训与执行改进）
