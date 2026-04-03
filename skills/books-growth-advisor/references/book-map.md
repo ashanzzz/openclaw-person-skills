@@ -21,14 +21,14 @@
 - 人性的弱点
 - 高效能人士的七个习惯
 
-## Local note paths
+## Framework reminder
 
-- `kb/books-notes/驱动力/master.md`
-- `kb/books-notes/人性的弱点/master.md`
-- `kb/books-notes/格鲁夫给经理人的第一课/master.md`
-- `kb/books-notes/第五项修炼/master.md`
-- `kb/books-notes/管理的常识/master.md`
-- `kb/books-notes/精益思想/master.md`
-- `kb/books-notes/领导梯队/master.md`
-- `kb/books-notes/丰田模式/master.md`
-- `kb/books-notes/高效能人士的七个习惯/master.md`
+- 驱动力：自主 / 专精 / 目的
+- 人性的弱点：先理解对方 + 真诚赞赏
+- 格鲁夫：管理杠杆 + 高质量会议 + 人才管理
+- 第五项修炼：系统思考 + 五项修炼
+- 管理的常识：目标-职责-反馈闭环
+- 精益思想：价值流 + 消除浪费
+- 领导梯队：六阶段转变
+- 丰田模式：长期主义 + 现场现物 + 持续改善
+- 七个习惯：主动、目标、要事、双赢、共情、协同、更新

@@ -1,41 +1,33 @@
 # openclaw-person-skills
 
-阿山的个人 OpenClaw Skills 仓库（已整理版）。
+阿山的个人 OpenClaw Skills 仓库（精简版）。
 
-## 当前仓库结构
+## 仓库定位
+
+这个仓库只保存：
+- **技能本体**（`skills/<skill-name>/`）
+- **技能依赖**（脚本、references、assets）
+- **仓库索引文档**
+
+不保存：
+- 运行中间数据
+- 电子书原文
+- 临时切片与缓存
+
+## 目录规范
 
 ```text
-skills/                 # 全部技能（统一入口）
-kb/books-notes/         # 书籍笔记与复核报告
-kb/news-tracker/        # 新闻追踪运行数据（非技能文件）
+skills/                 # 所有技能统一目录
 README.md
 REPO-INDEX.md
 .gitignore
 ```
 
-## 技能目录（统一在 `skills/`）
+## 主要技能
 
-- `book-learner`
-- `book-audit`
-- `book-notes-sop`
-- `books-growth-advisor`
-- `repo-structure-manager`
-- `erpnext-invoice-detail-export`
-- `erpnext-monthly-invoice-export`
-- `finance-reconcile-workbook`
-- `finance-remark-mapping`
-- `news-tracker`
-- `purchase-invoice-classifier`
-- `purchase-wire-transfer-reconcile`
-- `reconcile-output-format`
-- `vikunja-task-api`
+- `books-growth-advisor`：基于9本管理书的综合咨询（职业发展/工厂/管理/人际）
+- `repo-structure-manager`：仓库结构治理与发布边界控制
+- `book-learner` / `book-audit` / `book-notes-sop`：图书知识工程流程
+- 其余 ERPNext、Vikunja、财务等专项技能
 
-## 关键规则
-
-1. 技能只放 `skills/`，不再在仓库根目录散落 skill 文件夹。
-2. 图书流程仅发布笔记与技能：
-   - 发布：`master.md`、`slice_*_n.md`、`meta.json`、复核报告
-   - 不发布：EPUB、原始 `slice_*.md`
-3. 运行数据与技能资源分离（如 `kb/news-tracker/`）。
-
-详细目录见：`REPO-INDEX.md`
+详细见：`REPO-INDEX.md`

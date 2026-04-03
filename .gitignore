@@ -1,6 +1,8 @@
-# Source books (never publish)
-kb/books-source/
+# This repository stores skills only.
+# Runtime outputs and datasets must stay outside this repo.
 
-# Raw extracted slices (never publish)
-kb/books-notes/*/slice_*.md
-!kb/books-notes/*/slice_*_n.md
+kb/
+*.tmp
+*~
+*.bak
+*.bak_*

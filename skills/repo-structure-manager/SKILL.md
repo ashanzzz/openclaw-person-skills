@@ -10,20 +10,18 @@ Use this skill to keep the repository clean, consistent, and publish-ready.
 ## Target layout
 
 - `skills/<skill-name>/` — all skill packages
-- `kb/books-notes/` — generated note outputs and audits
-- `kb/news-tracker/` — runtime tracking data (non-skill content)
 - `README.md` + `REPO-INDEX.md` — repository navigation
 - `.gitignore` — publication guardrails
+
+Runtime outputs (logs, generated notes, datasets) should stay outside this repo.
 
 ## Mandatory checks
 
 1. No skill folder at repository root except `skills/`.
 2. Each skill folder must contain `SKILL.md`.
 3. Remove stale backups (`*.bak*`, temp files) unless explicitly required.
-4. Keep runtime data out of skill folders when possible.
-5. Enforce notes-only publication policy for book pipeline:
-   - include: `master.md`, `slice_*_n.md`, `meta.json`, reports
-   - exclude: EPUB and raw `slice_*.md`
+4. Keep runtime data out of this repository.
+5. Prevent source leakage (raw proprietary files, temporary extracts, local caches).
 
 ## Merge/cleanup strategy
 
@@ -37,4 +35,4 @@ Use this skill to keep the repository clean, consistent, and publish-ready.
 - Updated tree structure
 - Added/updated index docs
 - Created/updated management skill files
-- Clean git diff (no unintended binary/source leaks)
+- Clean git diff (no unintended data leaks)
