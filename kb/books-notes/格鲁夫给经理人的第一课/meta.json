@@ -5,7 +5,7 @@
   "isbn": "",
   "source": "格鲁夫给经理人的第一课.epub",
   "total_slices": 24,
-  "read_slices": 1,
+  "read_slices": 24,
   "status": "completed",
   "started": null,
   "completed": "2026-04-03",
@@ -13,5 +13,8 @@
   "goodreads_id": "324093",
   "publisher": "中信出版社",
   "year": "2013",
-  "note_slices": 1
+  "note_slices": 24,
+  "notes_style": "neutral-slice-notes-v2",
+  "slice_total": 24,
+  "note_total": 24
 }

@@ -5,7 +5,7 @@
   "isbn": "978-7-111-34934-1",
   "source": "领导梯队.epub",
   "total_slices": 25,
-  "read_slices": 1,
+  "read_slices": 25,
   "status": "completed",
   "started": null,
   "completed": "2026-04-03",
@@ -13,5 +13,8 @@
   "goodreads_id": "866829",
   "publisher": "机械工业出版社",
   "year": "2011",
-  "note_slices": 1
+  "note_slices": 25,
+  "notes_style": "neutral-slice-notes-v2",
+  "slice_total": 25,
+  "note_total": 25
 }

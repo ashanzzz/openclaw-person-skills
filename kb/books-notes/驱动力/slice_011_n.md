@@ -1,16 +1,14 @@
-# 驱动力 — Slice 011 笔记：封面
+# 驱动力 — Slice 011 笔记
 
-## 核心内容
+## 页面类型
+- 正文/其他
 
-- 这是书的封面/封底内容
-- Drive: The Surprising Truth About What Motivates Us
-- 作者：Daniel H. Pink
+## 主题
+- Cover @page {padding: 0pt; m
 
-## 我的理解
+## 摘要
+- Cover @page {padding: 0pt
+- margin:0pt} body { text-align: center
 
-这是驱动力全书的封面信息，无实质性内容。
-已通过阅读核心章节掌握了本书精华：
-- 驱动力1.0/2.0/3.0演变
-- 三大要素：自主+专精+目的
-- 胡萝卜大棒失效的7大原因
-- I型人 vs X型人
+## 关键词
+- 概要

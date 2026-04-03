@@ -5,7 +5,7 @@
   "isbn": "978-7-5158-0074-5",
   "source": "管理的常识.epub",
   "total_slices": 3,
-  "read_slices": 1,
+  "read_slices": 3,
   "status": "completed",
   "started": null,
   "completed": "2026-04-03",
@@ -13,5 +13,8 @@
   "goodreads_id": "11151622",
   "publisher": "中华工商联合出版社",
   "year": "2011",
-  "note_slices": 1
+  "note_slices": 3,
+  "notes_style": "neutral-slice-notes-v2",
+  "slice_total": 3,
+  "note_total": 3
 }

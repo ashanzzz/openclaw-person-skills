@@ -5,7 +5,7 @@
   "isbn": "978-7-111-33013-4",
   "source": "丰田模式.epub",
   "total_slices": 125,
-  "read_slices": 1,
+  "read_slices": 125,
   "status": "completed",
   "started": null,
   "completed": "2026-04-03",
@@ -13,5 +13,8 @@
   "goodreads_id": "3095932",
   "publisher": "机械工业出版社",
   "year": "2011",
-  "note_slices": 1
+  "note_slices": 125,
+  "notes_style": "neutral-slice-notes-v2",
+  "slice_total": 125,
+  "note_total": 125
 }

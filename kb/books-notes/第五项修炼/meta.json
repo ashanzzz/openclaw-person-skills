@@ -5,7 +5,7 @@
   "isbn": "978-7-115-29104-3",
   "source": "第五项修炼.epub",
   "total_slices": 37,
-  "read_slices": 1,
+  "read_slices": 37,
   "status": "completed",
   "started": null,
   "completed": "2026-04-03",
@@ -13,5 +13,8 @@
   "goodreads_id": "567983",
   "publisher": "中信出版社",
   "year": "2009",
-  "note_slices": 1
+  "note_slices": 37,
+  "notes_style": "neutral-slice-notes-v2",
+  "slice_total": 37,
+  "note_total": 37
 }

@@ -1,0 +1,6 @@
+# Source books (never publish)
+kb/books-source/
+
+# Raw extracted slices (never publish)
+kb/books-notes/*/slice_*.md
+!kb/books-notes/*/slice_*_n.md
