@@ -1,95 +1,455 @@
 ---
 name: vikunja-task-api
-version: 2.0.0
-description: Manage Vikunja projects and tasks (overdue/due/today), mark done, and get quick summaries via the Vikunja API.
+version: 2.1.0
+description: Full Vikunja v2 API integration — projects, tasks, labels, teams, views, comments, attachments, bulk operations, and more.
 homepage: https://vikunja.io/
 metadata: {"clawdbot":{"emoji":"📋","requires":{"bins":["curl","jq"],"env":["VIKUNJA_URL"],"optionalEnv":["VIKUNJA_TOKEN","VIKUNJA_USERNAME","VIKUNJA_PASSWORD"]},"primaryEnv":"VIKUNJA_TOKEN"}}
 ---
 
-# Vikunja Fast Skill (v2 API)
+# Vikunja Task API Skill (v2 / v2.2.2)
 
 Use Vikunja as the **source of truth** for all task management. This skill supersedes any internal working-buffer tracking for user-visible tasks.
 
 ## API Base
 
-- **Base URL**: `$VIKUNJA_URL/api/v1` (auto-normalized)
-- **Auth**: JWT Bearer token (`Authorization: Bearer <token>`)
-- **Token acquisition**: `POST /login` (username field is `username`)
+- **Base URL**: `$VIKUNJA_URL/api/v1` (auto-normalized, no trailing slash)
+- **Auth**: `Authorization: Bearer <token>` (JWT or API token)
+- **Token acquisition**: `POST /login` with `username` + `password`
 
-## Critical API Differences (Must Remember)
+## Authentication
 
-| Operation | Correct Method |
-|-----------|---------------|
-| Create project | `PUT /projects` (**PUT**, not POST) |
-| Update project | `POST /projects/{id}` (**POST**) |
-| Create task | `PUT /projects/{id}/tasks` (**PUT**, not POST) |
-| Update task (including mark done) | `POST /tasks/{id}` |
-| Get all tasks | `GET /tasks` (**not** `/tasks/all`) |
-| Delete task | `DELETE /tasks/{id}` |
-| Move task to kanban bucket | `POST /projects/{project}/views/{view}/buckets/{bucket}/tasks` |
-
-## Setup
-
+### Login (get JWT)
 ```bash
-# Environment variables (recommended: write to secure/api-fillin.env)
-VIKUNJA_URL=http://192.168.8.11:3456
-VIKUNJA_TOKEN=tk_xxxx   # API Token or JWT
+curl -X POST "$VIKUNJA_URL/api/v1/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"USER","password":"PASS"}' | jq '.token'
 ```
 
-## Quick Commands
+### API Token (recommended for automation)
+Create a token in Vikunja UI: Settings → API Tokens. Then use:
+```bash
+export VIKUNJA_TOKEN="tk_xxxx"
+```
+
+## Critical HTTP Method Rules (Must Remember!)
+
+| Operation | Method | Endpoint |
+|-----------|--------|----------|
+| Create project | **PUT** | `/projects` |
+| Update project | **POST** | `/projects/{id}` |
+| Delete project | **DELETE** | `/projects/{id}` |
+| Create task | **PUT** | `/projects/{id}/tasks` |
+| Update task | **POST** | `/tasks/{id}` |
+| Delete task | **DELETE** | `/tasks/{id}` |
+| Bulk update tasks | **POST** | `/tasks/bulk` |
+| Get all tasks | **GET** | `/tasks` |
+| Move task to bucket | **POST** | `/projects/{project}/views/{view}/buckets/{bucket}/tasks` |
+| Create label | **PUT** | `/labels` |
+| Update label | **PUT** | `/labels/{id}` |
+| Delete label | **DELETE** | `/labels/{id}` |
+
+## Core Endpoints
+
+### Projects
 
 ```bash
-# Login to get JWT (if you only have username/password)
-curl -X POST "$VIKUNJA_URL/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"USER","password":"PASS","long_token":true}' | jq
-
 # List all projects
-curl -s "$VIKUNJA_URL/projects" -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title}'
+curl -s "$VIKUNJA_URL/api/v1/projects" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title,owner}'
 
-# List all open tasks
-curl -s "$VIKUNJA_URL/tasks" -H "Authorization: Bearer $VIKUNJA_TOKEN" \
-  | jq '.[] | select(.done == false) | {id,title,due_date:.due_date,project_id}'
-
-# Create project (PUT /projects)
-curl -X PUT "$VIKUNJA_URL/projects" \
+# Create project (PUT, not POST!)
+curl -X PUT "$VIKUNJA_URL/api/v1/projects" \
   -H "Authorization: Bearer $VIKUNJA_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"title":"Project Name","description":"","identifier":"","hex_color":""}' | jq '{id,title}'
 
-# Create task in project (PUT /projects/{id}/tasks)
-curl -X PUT "$VIKUNJA_URL/projects/9/tasks" \
+# Get project details
+curl -s "$VIKUNJA_URL/api/v1/projects/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Update project (POST)
+curl -X POST "$VIKUNJA_URL/api/v1/projects/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"New Title","hex_color":"#ff0000"}' | jq '{id,title}'
+
+# Delete project
+curl -X DELETE "$VIKUNJA_URL/api/v1/projects/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+
+# Duplicate project
+curl -X PUT "$VIKUNJA_URL/api/v1/projects/{id}/duplicate" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '{id,title}'
+```
+
+### Tasks
+
+```bash
+# Get all open tasks (filter: done = false)
+curl -s "$VIKUNJA_URL/api/v1/tasks" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  | jq '.[] | select(.done == false) | {id,title,due_date,project_id}'
+
+# Get tasks by project
+curl -s "$VIKUNJA_URL/api/v1/projects/{id}/tasks" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  | jq '.[] | {id,title,done,due_date}'
+
+# Create task in project (PUT, not POST!)
+curl -X PUT "$VIKUNJA_URL/api/v1/projects/{project_id}/tasks" \
   -H "Authorization: Bearer $VIKUNJA_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"title":"Task Title","description":"","due_date":"2026-04-30T23:59:00Z"}' | jq '{id,title}'
 
-# Mark task done (POST /tasks/{id})
-curl -X POST "$VIKUNJA_URL/tasks/123" \
+# Get task details
+curl -s "$VIKUNJA_URL/api/v1/tasks/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Update task (POST) — including mark done
+curl -X POST "$VIKUNJA_URL/api/v1/tasks/{id}" \
   -H "Authorization: Bearer $VIKUNJA_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"done":true}' | jq '{id,done,done_at}'
+  -d '{"done":true,"title":"Updated Title"}' | jq '{id,done,done_at}'
 
-# Update task (POST /tasks/{id}, can change project_id to move task)
-curl -X POST "$VIKUNJA_URL/tasks/123" \
-  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"project_id":9,"title":"New Title"}' | jq '{id,project_id,title}'
-
-# Delete task (DELETE /tasks/{id})
-curl -X DELETE "$VIKUNJA_URL/tasks/123" \
+# Delete task
+curl -X DELETE "$VIKUNJA_URL/api/v1/tasks/{id}" \
   -H "Authorization: Bearer $VIKUNJA_TOKEN"
 
 # Bulk update tasks
-curl -X POST "$VIKUNJA_URL/tasks/bulk" \
+curl -X POST "$VIKUNJA_URL/api/v1/tasks/bulk" \
   -H "Authorization: Bearer $VIKUNJA_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"tasks":[{"id":1,"done":true},{"id":2,"done":true}]}' | jq
+
+# Update task position (for drag-and-drop reordering)
+curl -X POST "$VIKUNJA_URL/api/v1/tasks/{id}/position" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"position":0,"bucket_id":5}' | jq
+
+# Duplicate task
+curl -X PUT "$VIKUNJA_URL/api/v1/tasks/{id}/duplicate" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"project_id":9}' | jq '{id,title}'
 ```
+
+### Task Assignees
+
+```bash
+# Get assignees
+curl -s "$VIKUNJA_URL/api/v1/tasks/{id}/assignees" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Add assignee
+curl -X PUT "$VIKUNJA_URL/api/v1/tasks/{id}/assignees" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":1}' | jq
+
+# Bulk add assignees
+curl -X POST "$VIKUNJA_URL/api/v1/tasks/{id}/assignees/bulk" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"user_ids":[1,2,3]}' | jq
+
+# Remove assignee
+curl -X DELETE "$VIKUNJA_URL/api/v1/tasks/{id}/assignees/{user_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Task Labels
+
+```bash
+# Get labels on a task
+curl -s "$VIKUNJA_URL/api/v1/tasks/{id}/labels" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Add label to task
+curl -X PUT "$VIKUNJA_URL/api/v1/tasks/{id}/labels" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"label_id":5}' | jq
+
+# Bulk update labels on task
+curl -X POST "$VIKUNJA_URL/api/v1/tasks/{id}/labels/bulk" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"labels":[{"label_id":5},{"label_id":8}]}' | jq
+
+# Remove label from task
+curl -X DELETE "$VIKUNJA_URL/api/v1/tasks/{id}/labels/{label_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Task Comments
+
+```bash
+# Get comments
+curl -s "$VIKUNJA_URL/api/v1/tasks/{id}/comments" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Create comment
+curl -X PUT "$VIKUNJA_URL/api/v1/tasks/{id}/comments" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"comment":"This is a comment"}' | jq '{id,comment}'
+
+# Update comment
+curl -X POST "$VIKUNJA_URL/api/v1/tasks/{id}/comments/{comment_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"comment":"Updated comment"}' | jq
+
+# Delete comment
+curl -X DELETE "$VIKUNJA_URL/api/v1/tasks/{id}/comments/{comment_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Task Attachments
+
+```bash
+# List attachments
+curl -s "$VIKUNJA_URL/api/v1/tasks/{id}/attachments" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Upload attachment
+curl -X PUT "$VIKUNJA_URL/api/v1/tasks/{id}/attachments" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -F "file=@/path/to/file.pdf" | jq
+
+# Delete attachment
+curl -X DELETE "$VIKUNJA_URL/api/v1/tasks/{id}/attachments/{attachment_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Task Relations
+
+```bash
+# Create relation between two tasks
+curl -X PUT "$VIKUNJA_URL/api/v1/tasks/{id}/relations" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"other_task_id":10,"relation_kind":"subtask|blocks|depends_on|related"}' | jq
+
+# Remove relation
+curl -X DELETE "$VIKUNJA_URL/api/v1/tasks/{id}/relations/{relation_kind}/{other_task_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Labels (standalone)
+
+```bash
+# List all labels
+curl -s "$VIKUNJA_URL/api/v1/labels" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title,hex_color}'
+
+# Create label
+curl -X PUT "$VIKUNJA_URL/api/v1/labels" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Bug","hex_color":"#ff0000"}' | jq '{id,title}'
+
+# Update label
+curl -X PUT "$VIKUNJA_URL/api/v1/labels/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Feature","hex_color":"#00ff00"}' | jq
+
+# Delete label
+curl -X DELETE "$VIKUNJA_URL/api/v1/labels/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Project Views & Kanban Buckets
+
+```bash
+# List project views
+curl -s "$VIKUNJA_URL/api/v1/projects/{id}/views" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title,kind}'
+
+# List kanban buckets
+curl -s "$VIKUNJA_URL/api/v1/projects/{id}/views/{view_id}/buckets" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title}'
+
+# Create bucket
+curl -X PUT "$VIKUNJA_URL/api/v1/projects/{id}/views/{view_id}/buckets" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"To Do"}' | jq '{id,title}'
+
+# Update bucket
+curl -X POST "$VIKUNJA_URL/api/v1/projects/{project_id}/views/{view_id}/buckets/{bucket_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"In Progress"}' | jq
+
+# Delete bucket
+curl -X DELETE "$VIKUNJA_URL/api/v1/projects/{project_id}/views/{view_id}/buckets/{bucket_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+
+# Move task to bucket (kanban drag-and-drop)
+curl -X POST "$VIKUNJA_URL/api/v1/projects/{project}/views/{view}/buckets/{bucket}/tasks" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"task_id":123,"position":0}' | jq
+```
+
+### Project Members
+
+```bash
+# List project users
+curl -s "$VIKUNJA_URL/api/v1/projects/{id}/users" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Add user to project
+curl -X PUT "$VIKUNJA_URL/api/v1/projects/{id}/users" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":1,"rights":1}' | jq   # rights: 0=read, 1=write, 2=admin
+
+# Update user rights
+curl -X POST "$VIKUNJA_URL/api/v1/projects/{project_id}/users/{user_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"rights":2}' | jq
+
+# Remove user from project
+curl -X DELETE "$VIKUNJA_URL/api/v1/projects/{project_id}/users/{user_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Teams
+
+```bash
+# List all teams
+curl -s "$VIKUNJA_URL/api/v1/teams" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,name}'
+
+# Create team
+curl -X PUT "$VIKUNJA_URL/api/v1/teams" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Engineering"}' | jq '{id,name}'
+
+# Get team details
+curl -s "$VIKUNJA_URL/api/v1/teams/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Add member to team
+curl -X PUT "$VIKUNJA_URL/api/v1/teams/{id}/members" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"user@example.com"}' | jq
+```
+
+### Project Shares (link sharing)
+
+```bash
+# List shares
+curl -s "$VIKUNJA_URL/api/v1/projects/{id}/shares" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Create share link
+curl -X PUT "$VIKUNJA_URL/api/v1/projects/{id}/shares" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"right":1}' | jq  # right: 0=read, 1=write
+
+# Delete share
+curl -X DELETE "$VIKUNJA_URL/api/v1/projects/{id}/shares/{share_id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Saved Filters
+
+```bash
+# Create saved filter
+curl -X PUT "$VIKUNJA_URL/api/v1/filters" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"My Filter","filter":"done = false","project_id":0}' | jq '{id,title}'
+
+# Get saved filter
+curl -s "$VIKUNJA_URL/api/v1/filters/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Update saved filter
+curl -X POST "$VIKUNJA_URL/api/v1/filters/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"filter":"done = false && due_date < now"}' | jq
+
+# Delete saved filter
+curl -X DELETE "$VIKUNJA_URL/api/v1/filters/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Notifications
+
+```bash
+# Get notifications
+curl -s "$VIKUNJA_URL/api/v1/notifications" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title,message}'
+
+# Mark all as read
+curl -X POST "$VIKUNJA_URL/api/v1/notifications" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+
+# Mark one as (un)read
+curl -X POST "$VIKUNJA_URL/api/v1/notifications/{id}" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"is_read":true}' | jq
+```
+
+### Reactions
+
+```bash
+# Add reaction to entity (task, comment, etc.)
+curl -X PUT "$VIKUNJA_URL/api/v1/{kind}/{id}/reactions" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"reaction":"👍"}' | jq
+
+# Get reactions
+curl -s "$VIKUNJA_URL/api/v1/{kind}/{id}/reactions" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq
+
+# Remove reaction
+curl -X POST "$VIKUNJA_URL/api/v1/{kind}/{id}/reactions/delete" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN"
+```
+
+### Service Info
+
+```bash
+# Get instance info (no auth required)
+curl -s "$VIKUNJA_URL/api/v1/info" | jq
+```
+
+## Filtering Syntax
+
+Vikunja uses a powerful filter language:
+
+```
+done = false
+done = false && due_date < now
+done = false && project_id = 9
+done = false && due_date >= now/d && due_date < now/d + 1d
+done = false && due_date < now + 1w
+labels contains "Bug"
+title contains "urgent"
+priority > 0
+assignee = <user_id>
+```
+
+Full docs: https://vikunja.io/docs/filters/
 
 ## Helper CLI (vikunja.sh)
 
 ```bash
-# List open tasks (sorted by due date)
+# List open tasks
 vikunja.sh list --filter 'done = false'
 
 # Overdue tasks
@@ -98,14 +458,14 @@ vikunja.sh overdue
 # Due today
 vikunja.sh due-today
 
-# View task details
+# Show task
 vikunja.sh show 123
 
 # Mark done
 vikunja.sh done 123
 
 # Create task
-vikunja.sh create 9 "New Task Title"
+vikunja.sh create 9 "New Task"
 
 # Delete task
 vikunja.sh delete 123
@@ -113,28 +473,15 @@ vikunja.sh delete 123
 
 ## Task Display Format
 
-Each task output format:
+Each task output:
 ```
 <EMOJI> <DUE_DATE> - #<ID> <TASK>
 ```
+- Emoji: first char of project title (first non-alphanumeric token for CJK/English)
+- Default emoji: 🔨
+- No due date: `(no due)`
 
-- Emoji: first character of project title (first non-alphanumeric token for Chinese/English titles)
-- Default emoji when none: 🔨
-- No due date shows `(no due)`
-
-## Filtering Syntax
-
-Vikunja filter examples:
-```
-done = false
-done = false && due_date < now
-done = false && project_id = 9
-done = false && due_date >= now/d && due_date < now/d + 1d
-```
-
-Full docs: https://vikunja.io/docs/filters/
-
-## Task Model (Important Fields)
+## Task Model (Complete Field Reference)
 
 ```json
 {
@@ -152,8 +499,66 @@ Full docs: https://vikunja.io/docs/filters/
   "hex_color": "",
   "percent_done": 0,
   "created": "2026-03-31T12:00:00Z",
-  "updated": "2026-03-31T12:00:00Z"
+  "updated": "2026-03-31T12:00:00Z",
+  "cover_image_url": null,
+  "custom_fields": [],
+  "缕": []
 }
 ```
 
-Note: `due_date` = `0001-01-01T00:00:00Z` means no deadline.
+**Important:**
+- `due_date = 0001-01-01T00:00:00Z` = no deadline
+- `priority`: 0=none, 1=low, 2=medium, 3=high
+- `repeat_after`: seconds until respawn (0 = not recurring)
+
+## Pagination
+
+Endpoints that return lists support pagination via `page` and `per_page` query params.
+
+Headers returned:
+- `x-pagination-total-pages`
+- `x-pagination-result-count`
+
+## Setup
+
+```bash
+# Recommended: write to secure/api-fillin.env
+VIKUNJA_URL=http://192.168.8.11:3456
+VIKUNJA_TOKEN=tk_xxxx
+```
+
+## Differences from Typical REST APIs
+
+Vikunja uses non-standard methods for create operations:
+- **PUT** for create (projects, tasks, labels, comments, filters)
+- **POST** for update
+- **DELETE** for delete
+
+This is because Vikunja's create endpoints return the created object with an ID, allowing you to immediately work with it — similar to a POST but idempotent.
+
+## Complete API Group Summary
+
+| Group | Key Endpoints |
+|-------|--------------|
+| Auth | `POST /login` |
+| Projects | CRUD: PUT/GET/POST/DELETE `/projects` |
+| Tasks | CRUD: PUT(create in project), GET/POST/DELETE `/tasks` |
+| Task Assignees | GET/PUT/POST/DELETE `/tasks/{id}/assignees` |
+| Task Labels | GET/PUT/POST `/tasks/{id}/labels` |
+| Task Comments | GET/PUT/POST/DELETE `/tasks/{id}/comments` |
+| Task Attachments | GET/PUT/DELETE `/tasks/{id}/attachments` |
+| Task Relations | PUT/DELETE `/tasks/{id}/relations` |
+| Task Position | `POST /tasks/{id}/position` |
+| Labels | CRUD: PUT/GET/PUT/DELETE `/labels` |
+| Views & Buckets | GET `/projects/{id}/views`, CRUD `/buckets` |
+| Project Members | GET/PUT/POST/DELETE `/projects/{id}/users` |
+| Teams | CRUD: PUT/GET/POST/DELETE `/teams` |
+| Project Shares | GET/PUT/DELETE `/projects/{id}/shares` |
+| Saved Filters | CRUD: PUT/GET/POST/DELETE `/filters` |
+| Notifications | GET/POST `/notifications` |
+| Reactions | GET/PUT/POST `/reactions` |
+| User Settings | Various `/user/settings/*` |
+| Webhooks | CRUD `/webhooks` |
+| Service | `GET /info` (no auth) |
+
+Full OpenAPI spec: `$VIKUNJA_URL/api/v1/docs.json`
