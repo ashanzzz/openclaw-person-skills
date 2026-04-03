@@ -5,8 +5,13 @@
   "isbn": "978-7-5153-2181-5",
   "source": "人性的弱点.epub",
   "total_slices": 57,
-  "read_slices": 0,
-  "status": "pending",
+  "read_slices": 2,
+  "status": "completed",
   "started": null,
-  "completed": null
+  "completed": "2026-04-03",
+  "openlibrary_id": "OL6658934M",
+  "goodreads_id": "4865",
+  "publisher": "中华工商联合出版社",
+  "year": "2014",
+  "note_slices": 2
 }

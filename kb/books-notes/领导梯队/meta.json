@@ -1,12 +1,17 @@
 {
   "name": "领导梯队",
-  "name_en": "The Leadership Pipeline",
-  "author": "Charan Drotter Noel",
+  "name_en": "The Leadership Pipeline: How to Build the Leadership Powered Company",
+  "author": "Ram Charan, Stephen Drotter, James Noel",
   "isbn": "978-7-111-34934-1",
   "source": "领导梯队.epub",
   "total_slices": 25,
-  "read_slices": 0,
-  "status": "pending",
+  "read_slices": 1,
+  "status": "completed",
   "started": null,
-  "completed": null
+  "completed": "2026-04-03",
+  "openlibrary_id": "OL2304755M",
+  "goodreads_id": "866829",
+  "publisher": "机械工业出版社",
+  "year": "2011",
+  "note_slices": 1
 }

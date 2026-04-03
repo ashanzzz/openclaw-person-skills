@@ -1,12 +1,17 @@
 {
   "name": "高效能人士的七个习惯",
   "name_en": "The 7 Habits of Highly Effective People",
-  "author": "Stephen Covey",
+  "author": "Stephen R. Covey",
   "isbn": "978-7-5153-5058-5",
   "source": "高效能人士的七个习惯.epub",
   "total_slices": 47,
-  "read_slices": 0,
-  "status": "pending",
+  "read_slices": 1,
+  "status": "completed",
   "started": null,
-  "completed": null
+  "completed": "2026-04-03",
+  "openlibrary_id": "OL6658934M",
+  "goodreads_id": "360882",
+  "publisher": "中国青年出版社",
+  "year": "2018",
+  "note_slices": 1
 }
