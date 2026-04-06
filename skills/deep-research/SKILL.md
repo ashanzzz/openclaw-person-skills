@@ -1,16 +1,43 @@
----
-name: deep-research
-version: 1.1.0
-description: Deep Research Methodology — 8-step systematic research process with 4-tier source credibility, multi-source cross-verification, and blocking rules.
-metadata: {"clawdbot":{"emoji":"🔍"}}
----
-
 # Deep Research Skill
 
-> **For detailed installation instructions (human + AI agent), see [INSTALL.md](./INSTALL.md)**
-> Quick setup: `clawhub install ashanzzz-deep-research` or see INSTALL.md
+> Multi-source research methodology — executes when user asks "研究/调查/搜索" or similar research tasks. Supports 3-day research cache + auto-archive to MEMORY.md.
 
-> 深度研究方法论 — 当用户要求"研究/调查/搜索"时，执行此技能。
+---
+
+## Research Cache System（研究缓存系统）
+
+### 工作原理
+
+每次研究启动时，在 `/tmp/deep-research-cache/{slugified_topic}/{unix_timestamp}/` 下创建独立工作目录：
+
+```
+/tmp/deep-research-cache/
+  {topic-slug}/
+    {timestamp}/
+      claims/          ← 每条证据卡（claim_NNN.md）
+      rounds/          ← 每轮研究日志（round_NNN.md）
+      manifest.json    ← 所有证据的索引 + 可信度统计
+      report_final.md  ← 最终报告
+      .cleanup_scheduled ← 3天清理倒计时标记
+```
+
+### 3天清理逻辑
+
+1. `finalize.sh` 生成报告后，写入 `.cleanup_scheduled` 标记（记录"报告生成时间"）
+2. `cleanup.sh` 每运行一次，检查所有研究目录：
+   - **有活动**（用户在3天内继续研究，新增加了 claim/round）→ 删除 `.cleanup_scheduled`，取消清理计划
+   - **无活动**且距报告生成已 > 3天 → 将摘要写入 `MEMORY.md`，删除整个目录
+3. `MEMORY.md` 写入内容：主题 + 日期 + 核心结论（1-3句）+ T1/T2/T3/T4 来源统计 + 完整报告所在路径（待删除前还有效）
+
+### 如何继续研究
+
+用户只需说"**继续研究{原话题}**"，AI agent 会：
+1. 找到 `/tmp/deep-research-cache/` 下该 topic 的**最新目录**
+2. 从 manifest.json 读取已有证据
+3. 在最新目录继续追加 claim + round
+4. 更新 manifest + 重新生成报告
+
+> **注意**：完整报告在清理前仅存在于 `/tmp/deep-research-cache/`，不复制到 workspace。如需保留报告，请告知用户或主动复制到 workspace。
 
 ---
 
@@ -23,6 +50,7 @@ metadata: {"clawdbot":{"emoji":"🔍"}}
 - "帮我调查..."
 - "核实..."
 - "确认一下..."
+- "继续研究..."
 
 **注意**：简单的事实查询（"今天天气如何"）不需要触发此技能。
 
@@ -95,6 +123,8 @@ metadata: {"clawdbot":{"emoji":"🔍"}}
 - 可信度：✅确认 / ⚠️存疑 / ❌矛盾
 ```
 
+**使用缓存系统时，每张证据卡通过 `claim-card.sh` 写入缓存目录。**
+
 ### Step 4：构建对比框架
 
 比较型问题必须建立对比矩阵：
@@ -134,7 +164,7 @@ metadata: {"clawdbot":{"emoji":"🔍"}}
 
 ### Step 8：输出格式化
 
-按以下格式交付（详见下方输出模板）。
+按以下格式交付（详见下方输出模板）。报告由 `finalize.sh` 生成。
 
 ---
 
@@ -191,6 +221,55 @@ metadata: {"clawdbot":{"emoji":"🔍"}}
 
 ---
 
+## 脚本使用指南
+
+### 启动研究
+
+```bash
+cd /root/.openclaw/workspace/skills/deep-research/scripts
+TOPIC="你的研究主题" SESSION_ID="可选ID" bash research.sh
+```
+
+### 记录证据卡
+
+```bash
+CLAIM_ID="claim_001" \
+TOPIC="研究主题" \
+CONTENT="具体结论内容..." \
+SOURCE="https://..." \
+SOURCE_TIER="T2" \
+VERIFICATION_STATUS="pending" \
+ROUND="1" \
+CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
+bash claim-card.sh
+```
+
+### 更新索引
+
+```bash
+CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
+TOPIC="研究主题" \
+SESSION_ID="xxx" \
+bash manifest.sh
+```
+
+### 生成报告
+
+```bash
+CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
+TOPIC="研究主题" \
+SESSION_ID="xxx" \
+bash finalize.sh
+```
+
+### 清理检查（可定时运行）
+
+```bash
+bash cleanup.sh
+```
+
+---
+
 ## 触发此技能时的用户沟通规则
 
 **研究开始时**（简短告知）：
@@ -199,7 +278,8 @@ metadata: {"clawdbot":{"emoji":"🔍"}}
 **研究过程中**（如果发现方向偏差）：
 > "我发现原问题的方向可能需要调整——[说明原因]，建议改成[新方向]，可以吗？"
 
-**完成时**：按上方模板输出完整报告。
+**完成时**：按上方模板输出完整报告，并告知：
+> "报告已生成，缓存保留3天，如继续研究请在3天内继续对话。"
 
 ---
 
