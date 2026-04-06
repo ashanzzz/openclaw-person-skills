@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-快速验证 OpenClaw Skill 格式
+Quick validation for OpenClaw Skill format
 
 Usage:
     python3 quick_validate.py <skill-directory>
 
 Exit codes:
-    0 = 验证通过
-    1 = 验证失败
+    0 = valid
+    1 = invalid
 """
 
 import re
@@ -31,8 +31,8 @@ def _extract_frontmatter(content: str) -> Optional[str]:
 
 def _parse_simple_frontmatter(text: str) -> Optional[dict]:
     """
-    纯 Python frontmatter 解析（无 PyYAML 依赖时使用）。
-    支持简单的 key: value 映射。
+    Pure-Python frontmatter parser (fallback when PyYAML unavailable).
+    Supports simple key: value mappings.
     """
     parsed, current_key = {}, None
     for raw in text.splitlines():
@@ -58,7 +58,7 @@ def _parse_simple_frontmatter(text: str) -> Optional[dict]:
 
 
 def validate_skill(skill_path: str) -> Tuple[bool, str]:
-    """验证 Skill 目录格式"""
+    """Validate a Skill directory's format."""
     skill_path = Path(skill_path)
 
     skill_md = skill_path / "SKILL.md"
@@ -68,63 +68,63 @@ def validate_skill(skill_path: str) -> Tuple[bool, str]:
     try:
         content = skill_md.read_text(encoding="utf-8")
     except OSError as e:
-        return False, f"无法读取 SKILL.md: {e}"
+        return False, f"Cannot read SKILL.md: {e}"
 
     fm_text = _extract_frontmatter(content)
     if fm_text is None:
-        return False, "Frontmatter 格式无效（需要 --- 分隔符）"
+        return False, "Invalid frontmatter (missing --- delimiters)"
 
-    # 尝试 PyYAML，如果不可用则降级
+    # Try PyYAML, fallback to simple parser
     try:
         import yaml
         frontmatter = yaml.safe_load(fm_text)
         if not isinstance(frontmatter, dict):
-            return False, "Frontmatter 必须是 YAML 字典"
+            return False, "Frontmatter must be a YAML dictionary"
     except Exception:
         frontmatter = _parse_simple_frontmatter(fm_text)
         if frontmatter is None:
-            return False, "Frontmatter YAML 解析失败（请安装 PyYAML 以获得最佳支持）"
+            return False, "Frontmatter YAML parse failed (install PyYAML for best support)"
 
-    # 检查意外字段
+    # Check for unexpected fields
     unexpected = set(frontmatter.keys()) - ALLOWED_PROPERTIES
     if unexpected:
         allowed = ", ".join(sorted(ALLOWED_PROPERTIES))
-        return False, f"意外字段: {', '.join(sorted(unexpected))}。允许: {allowed}"
+        return False, f"Unexpected fields: {', '.join(sorted(unexpected))}. Allowed: {allowed}"
 
-    # name 检查
+    # name checks
     if "name" not in frontmatter:
-        return False, "缺少 'name' 字段"
+        return False, "Missing 'name' field"
     name = frontmatter.get("name", "").strip()
     if not isinstance(name, str):
-        return False, f"name 必须是字符串，得到 {type(name).__name__}"
+        return False, f"name must be string, got {type(name).__name__}"
     if not re.match(r"^[a-z0-9][a-z0-9-]*$", name):
-        return False, f"name '{name}' 必须为小写字母/数字/连字符，且以字母或数字开头"
+        return False, f"name '{name}' must be lowercase letters/digits/hyphens, start with letter or digit"
     if len(name) > MAX_SKILL_NAME_LENGTH:
-        return False, f"name 过长（{len(name)}字符），上限 {MAX_SKILL_NAME_LENGTH}"
+        return False, f"name too long ({len(name)} chars), max {MAX_SKILL_NAME_LENGTH}"
 
-    # description 检查
+    # description checks
     if "description" not in frontmatter:
-        return False, "缺少 'description' 字段"
+        return False, "Missing 'description' field"
     desc = frontmatter.get("description", "").strip()
     if not isinstance(desc, str):
-        return False, f"description 必须是字符串"
+        return False, f"description must be string"
     if "<" in desc or ">" in desc:
-        return False, "description 不能包含 < 或 > 符号"
+        return False, "description must not contain < or > characters"
     if len(desc) > 1024:
-        return False, f"description 过长（{len(desc)}字符），上限 1024"
+        return False, f"description too long ({len(desc)} chars), max 1024"
 
-    # 禁止的文件检查
+    # Forbidden files
     forbidden = ["README.md", "CHANGELOG.md", "INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md"]
     for f in forbidden:
         if (skill_path / f).exists():
-            return False, f"禁止文件存在: {f}（Skill 目录不应包含用户文档）"
+            return False, f"Forbidden file present: {f} (Skill dirs should not contain user docs)"
 
-    return True, "验证通过！"
+    return True, "Validation passed!"
 
 
 def main():
     if len(sys.argv) != 2:
-        print("用法: python3 quick_validate.py <skill-directory>")
+        print("Usage: python3 quick_validate.py <skill-directory>")
         sys.exit(1)
 
     valid, msg = validate_skill(sys.argv[1])

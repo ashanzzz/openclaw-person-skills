@@ -1,86 +1,86 @@
-# OpenClaw Skill 工作流模式参考
+# Workflow Patterns Reference
 
-本文档提供创建 Skill 时的常用模式参考。
+Common patterns for structuring Skill content.
 
 ---
 
-## 模式一：顺序工作流
+## Pattern 1: Sequential Workflow
 
-适用于：步骤固定、顺序执行的场景。
+Best for: Fixed-step, sequential processes.
 
 ```markdown
-## 执行步骤
+## Steps
 
-### Step 1: 准备
-[做什么 + 验证方法]
+### Step 1: Prepare
+[What + how to verify]
 
-### Step 2: 执行核心操作
-[具体命令/API 调用]
+### Step 2: Execute Core Operation
+[Specific commands/API calls]
 
-### Step 3: 校验结果
-[如何确认成功/失败]
+### Step 3: Validate Result
+[How to confirm success/failure]
 ```
 
 ---
 
-## 模式二：任务分支
+## Pattern 2: Task Branches
 
-适用于：同一 Skill 支持多种操作类型。
+Best for: Single Skill supporting multiple operation types.
 
 ```markdown
-## 支持的操作
+## Supported Operations
 
-### 类型 A：导出
-[步骤]
+### Type A: Export
+[Steps]
 
-### 类型 B：导入
-[步骤]
+### Type B: Import
+[Steps]
 
-### 类型 C：查询
-[步骤]
+### Type C: Query
+[Steps]
 ```
 
 ---
 
-## 模式三：参考文件导航
+## Pattern 3: Reference Navigation
 
-适用于：内容多，必须拆分到 references/。
+Best for: Content too large for SKILL.md, must split into references/.
 
-SKILL.md 中：
+In SKILL.md:
 ```markdown
-## 详细参考
+## Detailed References
 
-- **API 文档**: 见 `references/api.md`
-- **常见错误**: 见 `references/errors.md`
-- **示例**: 见 `references/examples.md`
+- **API docs**: See `references/api.md`
+- **Common errors**: See `references/errors.md`
+- **Examples**: See `references/examples.md`
 ```
 
-references/api.md 中：
+In references/api.md:
 ```markdown
-# API 参考
+# API Reference
 
-## 认证
-[详细说明]
+## Authentication
+[Details]
 
-## 端点列表
-[完整列表]
+## Endpoint List
+[Complete list]
 ```
 
 ---
 
-## 模式四：好/坏对比示例
+## Pattern 4: Good/Bad Example Pairs
 
 ```markdown
 ## Examples
 
-### ✅ 正确示范
-用户说："帮我导出吉众3月发票"
-Agent 做法：[正确步骤]
-输出：[符合标准的 Excel]
+### ✅ Correct
+User: "Export JZ March invoices"
+Agent: [correct steps]
+Output: [standards-compliant Excel]
 
-### ❌ 错误示范
-用户说："导出发票"
-Agent 做法：[踩坑操作]
-结果：[格式错误/缺少字段]
-原因：没有确认公司和月份
+### ❌ Wrong
+User: "Export invoices"
+Agent: [wrong operation]
+Result: [wrong format / missing fields]
+Why: Didn't confirm company + month first
 ```
