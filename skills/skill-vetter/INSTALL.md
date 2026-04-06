@@ -1,4 +1,4 @@
-# Skill Vetter — Installation Guide
+# Skill Vetter — Installation
 
 > Security-first skill vetting for AI agents. Use before installing any skill from ClawHub, GitHub, or other sources.
 
@@ -6,102 +6,81 @@
 
 ## For Humans
 
-### Option A: Let an AI Agent Do It (Recommended)
+### Option A: One Command Install (Recommended)
 
-Copy and paste this into your AI agent (OpenClaw, Claude Code, Cursor, etc.):
-
-```
-Install and configure the Skill Vetter skill by following the instructions here:
-https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/skill-vetter/INSTALL.md
+```bash
+clawhub install ashanzzz-skill-vetter
 ```
 
-### Option B: Manual Installation
-
-**Step 1:** Create the skills directory:
+### Option B: Manual Install
 
 ```bash
 mkdir -p ~/.openclaw/workspace/skills/skill-vetter
-```
-
-**Step 2:** Download the SKILL.md:
-
-```bash
 curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/skill-vetter/SKILL.md \
   -o ~/.openclaw/workspace/skills/skill-vetter/SKILL.md
-```
-
-**Step 3:** Verify:
-
-```bash
-head -10 ~/.openclaw/workspace/skills/skill-vetter/SKILL.md
 ```
 
 ---
 
 ## For AI Agents
 
-> **IMPORTANT: Use `curl` to fetch this file, NOT WebFetch or web_fetch.**
-> Always use:
-> ```bash
-> curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/skill-vetter/INSTALL.md
-> ```
+### Primary Method: Use `clawhub install`
 
-### Step 1: Detect Existing Installation
+```bash
+clawhub install ashanzzz-skill-vetter
+```
+
+### Step-by-Step (if clawhub install is unavailable)
+
+> **IMPORTANT: If `clawhub install` is unavailable, use `curl` as fallback.**
+> NEVER use WebFetch.
+
+**Step 1: Check if already installed**
 
 ```bash
 if [ -f "$WORKSPACE/skills/skill-vetter/SKILL.md" ]; then
     echo "Already installed"
-    grep "^description:" $WORKSPACE/skills/skill-vetter/SKILL.md | head -1
+    grep "^description:" $WORKSPACE/skills/skill-vetter/SKILL.md | head -1 | cut -c1-80
 else
     echo "Not installed"
 fi
 ```
 
-### Step 2: Create Directory
+**Step 2: Download SKILL.md**
 
 ```bash
 mkdir -p ~/.openclaw/workspace/skills/skill-vetter
-```
-
-### Step 3: Download SKILL.md
-
-```bash
 curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/skill-vetter/SKILL.md \
   -o ~/.openclaw/workspace/skills/skill-vetter/SKILL.md
 ```
 
-### Step 4: Verify Content
+**Step 3: Verify critical sections**
 
 ```bash
-# Verify critical sections exist
 for section in "RED FLAGS" "Risk Level" "Vetting Protocol" "Source Check"; do
-    if grep -qi "$section" $WORKSPACE/skills/skill-vetter/SKILL.md; then
-        echo "✓ Found: $section"
-    else
-        echo "✗ MISSING: $section"
-    fi
+    grep -qi "$section" $WORKSPACE/skills/skill-vetter/SKILL.md \
+      && echo "✓ $section" \
+      || echo "✗ MISSING: $section"
 done
 ```
 
-### Step 5: Report to User
+**Step 4: Report to user**
 
 ```bash
-echo "Skill Vetter installed at: $WORKSPACE/skills/skill-vetter/SKILL.md"
-echo "Activated when: vetting a skill, checking for red flags, before installing from ClawHub/GitHub"
+echo "Skill Vetter installed: $WORKSPACE/skills/skill-vetter/SKILL.md"
+echo "Activates on: vetting skills, security checks, before installing from ClawHub/GitHub"
 ```
 
 ---
 
 ## Post-Installation
 
-After installing, the skill activates when:
-- Installing any skill from ClawHub or GitHub
+The skill activates when:
 - User says: "vet this skill", "check for security issues", "is this safe to install"
-- Before running any unknown code or scripts
+- Before installing any skill from ClawHub or GitHub
+- Before running unknown code or scripts
 
-The skill performs: Source check, Code review (RED FLAGS scan), Permission scope analysis, Risk classification (LOW / MEDIUM / HIGH / EXTREME).
-
-## Skill Vetter Quick Reference
+## Quick Reference
 
 | Risk Level | Action |
 |-----------|--------|
@@ -109,3 +88,11 @@ The skill performs: Source check, Code review (RED FLAGS scan), Permission scope
 | 🟡 MEDIUM | Full code review required |
 | 🔴 HIGH | Human approval required |
 | ⛔ EXTREME | Do NOT install |
+
+## Uninstall
+
+```bash
+clawhub uninstall ashanzzz-skill-vetter
+# Or manually:
+rm -rf ~/.openclaw/workspace/skills/skill-vetter
+```

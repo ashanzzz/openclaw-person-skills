@@ -1,107 +1,93 @@
 # openclaw-person-skills
 
-> Ashan's personal OpenClaw skills collection — published to ClawHub for easy installation.
+> Ashan's personal OpenClaw skills — published to ClawHub for one-command installation.
 
-## Quick Install (Pick One)
+---
 
-### Human: Let an AI Agent Do It
+## Quick Install
 
-```
-Install and configure the openclaw-person-skills collection by following:
-https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/README.md
-```
-
-Then ask your AI agent: "Show me available skills and install [skill name]"
-
-### Human: Manual One-Liner
+### One Command (All Skills)
 
 ```bash
-# Install any skill by name
-curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/[SKILL-NAME]/INSTALL.md | bash
+clawhub install ashanzzz-vikunja-task-api
+clawhub install ashanzzz-deep-research
+clawhub install ashanzzz-skill-vetter
+clawhub install ashanzzz-unraidclaw
 ```
 
-### AI Agent: Install All Skills
+### Or Install All at Once
 
 ```bash
-# For each skill, curl its INSTALL.md and follow steps
-SKILLS="vikunja-task-api deep-research skill-vetter unraidclaw proactivity self-improving books-growth-advisor erpnext-monthly-invoice-export"
-
-for SKILL in $SKILLS; do
-    echo "=== Installing: $SKILL ==="
-    curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/$SKILL/INSTALL.md \
-      && echo "=== Done: $SKILL ==="
+for SKILL in vikunja-task-api deep-research skill-vetter unraidclaw proactivity self-improving books-growth-advisor; do
+    clawhub install ashanzzz-$SKILL 2>/dev/null || echo "⚠ $SKILL not yet on ClawHub"
 done
 ```
 
-### AI Agent: Install Single Skill
+---
+
+## Available Skills
+
+| Skill | ClawHub Install | Description |
+|-------|----------------|-------------|
+| `vikunja-task-api` | `clawhub install ashanzzz-vikunja-task-api` | Full Vikunja v2 API integration |
+| `deep-research` | `clawhub install ashanzzz-deep-research` | 8-step research methodology |
+| `skill-vetter` | `clawhub install ashanzzz-skill-vetter` | Security vetting before installing skills |
+| `unraidclaw` | `clawhub install ashanzzz-unraidclaw` | Unraid server management |
+| `proactivity` | *(pending ClawHub publish)* | Proactive agent behavior |
+| `self-improving` | *(pending ClawHub publish)* | Self-reflection + learning |
+| `books-growth-advisor` | *(pending ClawHub publish)* | Management classics advisor |
+| `erpnext-*` | *(pending ClawHub publish)* | ERPNext integrations |
+| `finance-*` | *(pending ClawHub publish)* | Financial reconciliation |
+| `news-tracker` | *(pending ClawHub publish)* | News tracking |
+| `book-*` | *(pending ClawHub publish)* | Book knowledge pipeline |
+
+Browse all on ClawHub: https://clawhub.ai/ashanzzz
+
+---
+
+## Manual / Offline Installation
+
+If `clawhub install` is unavailable, use curl:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/[SKILL-NAME]/INSTALL.md
-# Then follow the Step-by-step instructions in the file
+SKILL_NAME=vikunja-task-api
+mkdir -p ~/.openclaw/workspace/skills/$SKILL_NAME
+curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/$SKILL_NAME/SKILL.md \
+  -o ~/.openclaw/workspace/skills/$SKILL_NAME/SKILL.md
+```
+
+> **IMPORTANT:** Use `curl`, NOT WebFetch. WebFetch strips formatting and critical details.
+
+---
+
+## For AI Agents: Install Single Skill
+
+```bash
+# Primary: use clawhub
+clawhub install ashanzzz-[skill-name]
+
+# Fallback: curl
+curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/[skill-name]/INSTALL.md
+# Then follow the step-by-step instructions in the file
+```
+
+---
+
+## For AI Agents: Detect Installed Skills
+
+```bash
+for DIR in ~/.openclaw/workspace/skills/*/; do
+    if [ -f "$DIR/SKILL.md" ]; then
+        NAME=$(basename "$DIR")
+        VER=$(grep "^version:" "$DIR/SKILL.md" 2>/dev/null | cut -d: -f2 | tr -d ' ' || echo "unknown")
+        echo "  ✓ $NAME (v$VER)"
+    fi
+done
 ```
 
 ---
 
 ## Repository Scope
 
-**This repo contains:**
-- Skill本体 (`skills/<name>/SKILL.md`)
-- Skill dependencies (scripts, references, assets)
-- Skill installation guides (`skills/<name>/INSTALL.md`)
-
-**This repo does NOT contain:**
-- Runtime data or working files
-- Original ebook content
-- Temporary caches or slices
-
----
-
-## Available Skills
-
-| Skill | Description | Install File |
-|-------|-------------|-------------|
-| `vikunja-task-api` | Full Vikunja v2 API integration | [INSTALL.md](./skills/vikunja-task-api/INSTALL.md) |
-| `deep-research` | 8-step research methodology + 4-tier source credibility | [INSTALL.md](./skills/deep-research/INSTALL.md) |
-| `skill-vetter` | Security-first skill vetting before installing any skill | [INSTALL.md](./skills/skill-vetter/INSTALL.md) |
-| `unraidclaw` | Unraid server management via UnraidCLaW REST API | [INSTALL.md](./skills/unraidclaw/INSTALL.md) |
-| `proactivity` | Proactive agent behavior framework | [INSTALL.md](./skills/proactivity/INSTALL.md) |
-| `self-improving` | Self-reflection + self-criticism + self-learning | [INSTALL.md](./skills/self-improving/INSTALL.md) |
-| `books-growth-advisor` | Management classics advisor (9 books) | [INSTALL.md](./skills/books-growth-advisor/INSTALL.md) |
-| `erpnext-monthly-invoice-export` | ERPNext monthly invoice export | [INSTALL.md](./skills/erpnext-monthly-invoice-export/INSTALL.md) |
-| `erpnext-invoice-detail-export` | ERPNext invoice detail export | [INSTALL.md](./skills/erpnext-invoice-detail-export/INSTALL.md) |
-| `finance-reconcile-workbook` | Financial reconciliation workbook generator | [INSTALL.md](./skills/finance-reconcile-workbook/INSTALL.md) |
-| `purchase-wire-transfer-reconcile` | Wire transfer reconciliation | [INSTALL.md](./skills/purchase-wire-transfer-reconcile/INSTALL.md) |
-| `news-tracker` | News tracking and archiving | [INSTALL.md](./skills/news-tracker/INSTALL.md) |
-| `book-learner` | Book reading and note generation | [INSTALL.md](./skills/book-learner/INSTALL.md) |
-| `book-audit` | Book note integrity audit | [INSTALL.md](./skills/book-audit/INSTALL.md) |
-
----
-
-## ClawHub Publication
-
-All skills are published to ClawHub under the author `ashanzzz`:
-
-```bash
-# Install from ClawHub (if your OpenClaw has clawhub CLI)
-clawhub install ashanzzz-vikunja-task-api
-clawhub install ashanzzz-deep-research
-# ... more skills coming
-```
-
-Browse all: https://clawhub.ai/ashanzzz
-
----
-
-## For AI Agents: Detecting Installed Skills
-
-```bash
-INSTALLED_SKILLS=""
-for DIR in ~/.openclaw/workspace/skills/*/; do
-    if [ -f "$DIR/SKILL.md" ]; then
-        NAME=$(basename "$DIR")
-        VER=$(grep "^version:" "$DIR/SKILL.md" 2>/dev/null | cut -d: -f2 | tr -d ' ' || echo "unknown")
-        INSTALLED_SKILLS="$INSTALLED_SKILLS\n  ✓ $NAME (v$VER)"
-    fi
-done
-echo "Installed skills:$INSTALLED_SKILLS"
-```
+**Contains:** Skill本体 (`SKILL.md`), scripts, references, installation guides (`INSTALL.md`)
+**Does NOT contain:** Runtime data, ebook content, caches
