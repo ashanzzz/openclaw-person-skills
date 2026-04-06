@@ -28,72 +28,86 @@
 
 ## 技能清单
 
-### 一、openclaw-person-skills 仓库
+### 一、我们自建并上传到 ClawHub
 
-| Skill | 来源 | 说明 |
-|-------|------|------|
-| `deep-research` | **自建** | 2026-04-06 创建，8步研究方法论 |
-| `vikunja-task-api` | **自建** | 2026-04-03 创建，Vikunja v2 API |
-| `skill-vetter` | **自建** | 2026-04-06 创建，安全审核协议 |
-| `unraidclaw` | **Fork 自建** | 2026-04-06 从本地 workspace 复制并发布 |
-| `books-growth-advisor` | **自建** | 基于9本管理书的顾问框架 |
-| `erpnext-monthly-invoice-export` | **自建** | ERPNext 月度发票导出 |
-| `erpnext-invoice-detail-export` | **自建** | ERPNext 发票明细导出 |
-| `finance-reconcile-workbook` | **自建** | 财务对账工作簿生成器 |
-| `finance-remark-mapping` | **自建** | 财务备注映射 |
-| `purchase-wire-transfer-reconcile` | **自建** | 采购电汇对账 |
-| `purchase-invoice-classifier` | **自建** | 采购发票分类 |
-| `reconcile-output-format` | **自建** | 对账输出格式化 |
-| `book-learner` | **自建** | 图书切片阅读与笔记生成 |
-| `book-audit` | **自建** | 图书笔记完整性审计 |
-| `book-notes-sop` | **自建** | 大任务一次性执行 SOP |
-| `repo-structure-manager` | **自建** | 仓库结构治理 |
-| `news-tracker` | **自建** | 新闻追踪存档 |
-
-> 注：以上技能中，5个已发布到 ClawHub，其余为内部管理，不上传。
+| Skill | ClawHub Slug | 版本 | 地址 |
+|-------|-------------|------|------|
+| `deep-research` | `ashanzzz-deep-research` | 1.2.0 | https://clawhub.ai/ashanzzz/ashanzzz-deep-research |
+| `vikunja-task-api` | `ashanzzz-vikunja-task-api` | 2.4.0 | https://clawhub.ai/ashanzzz/ashanzzz-vikunja-task-api |
+| `skill-vetter` | `ashanzzz-skill-vetter` | 1.2.0 | https://clawhub.ai/ashanzzz/ashanzzz-skill-vetter |
+| `unraidclaw` | `ashanzzz-unraidclaw` | 1.2.0 | https://clawhub.ai/ashanzzz/ashanzzz-unraidclaw |
+| `sure-api` | `sure-api` | 1.0.0 | https://clawhub.ai/ashanzzz/sure-api |
 
 ---
 
-### 二、本地 workspace 独有（外部下载，内部管理）
+### 二、我们自建，仅在 GitHub 仓库（内部管理，不上传）
 
-| Skill | 来源 | 说明 |
-|-------|------|------|
-| `7habits-operations-guide` | 外部下载 | 内部管理 |
-| `aabao-gemini-img2img` | 外部下载 | aabao Gemini 图生图 |
-| `agent-browser` | 外部下载 | Agent Browser 自动化 |
-| `conversation-summarizer` | 外部下载 | 会话摘要 |
-| `excel-xlsx` | 外部下载 | Excel 操作 |
-| `gog` | 外部下载 | 内部管理 |
-| `humanizer` | 外部下载 | 内部管理 |
-| `inventory-ledger-splitter` | 外部下载 | 库存账本拆分 |
-| `job-hunt-orchestrator` | 外部下载 | 找工作编排 |
-| `model-config` | 外部下载 | 模型配置管理 |
-| `operations-advisor` | 外部下载 | 运营顾问 |
-| `proactivity` | 外部下载 | 主动工作流 |
-| `self-improving` | 外部下载 | 自学习 |
-| `self-improving-agent` | 外部下载 | 自学习 agent |
-| `unraid-dockerman-xml-deploy` | 外部下载 | Unraid Docker XML 部署 |
-| `unraid-xml-generator` | 外部下载 | Unraid XML 模板生成 |
-| `vikunja-fast` | 外部下载 | vikunja-task-api 简化版 |
-| `word-docx` | 外部下载 | Word 操作 |
-| `ruijie-noc-donglihu-watch` | **自建** | 锐捷 NOC 监控脚本 |
+| Skill | 说明 | GitHub 路径 |
+|-------|------|------------|
+| `books-growth-advisor` | 基于9本管理书的顾问框架 | `openclaw-person-skills/skills/books-growth-advisor/` |
+| `erpnext-monthly-invoice-export` | ERPNext 月度发票导出 | `openclaw-person-skills/skills/erpnext-monthly-invoice-export/` |
+| `erpnext-invoice-detail-export` | ERPNext 发票明细导出 | `openclaw-person-skills/skills/erpnext-invoice-detail-export/` |
+| `finance-reconcile-workbook` | 财务对账工作簿生成器 | `openclaw-person-skills/skills/finance-reconcile-workbook/` |
+| `finance-remark-mapping` | 财务备注映射 | `openclaw-person-skills/skills/finance-remark-mapping/` |
+| `purchase-wire-transfer-reconcile` | 采购电汇对账 | `openclaw-person-skills/skills/purchase-wire-transfer-reconcile/` |
+| `purchase-invoice-classifier` | 采购发票分类 | `openclaw-person-skills/skills/purchase-invoice-classifier/` |
+| `reconcile-output-format` | 对账输出格式化 | `openclaw-person-skills/skills/reconcile-output-format/` |
+| `book-learner` | 图书切片阅读与笔记生成 | `openclaw-person-skills/skills/book-learner/` |
+| `book-audit` | 图书笔记完整性审计 | `openclaw-person-skills/skills/book-audit/` |
+| `book-notes-sop` | 大任务一次性执行 SOP | `openclaw-person-skills/skills/book-notes-sop/` |
+| `repo-structure-manager` | 仓库结构治理 | `openclaw-person-skills/skills/repo-structure-manager/` |
+| `news-tracker` | 新闻追踪存档 | `openclaw-person-skills/skills/news-tracker/` |
 
 ---
 
-## 同步状态追踪
+### 三、我们自建，仅本地（内部管理）
 
-### ClawHub 发布状态
+| Skill | 说明 | 存放位置 |
+|-------|------|---------|
+| `ruijie-noc-donglihu-watch` | 锐捷 NOC 监控脚本 | `~/.openclaw/workspace/skills/ruijie-noc-donglihu-watch/` |
 
-| Skill | ClawHub Slug | 版本 | 状态 |
-|-------|--------------|------|------|
-| `deep-research` | `ashanzzz-deep-research` | 1.2.0 | ✅ 已发布 |
-| `vikunja-task-api` | `ashanzzz-vikunja-task-api` | 2.4.0 | ✅ 已发布 |
-| `skill-vetter` | `ashanzzz-skill-vetter` | 1.2.0 | ✅ 已发布 |
-| `unraidclaw` | `ashanzzz-unraidclaw` | 1.2.0 | ✅ 已发布 |
-| `sure-api` | `sure-api` | 1.0.0 | ✅ 已发布 |
-| 其余自建技能 | — | — | 🚫 内部管理，不上传 |
+---
 
-### 发布/更新流程
+### 四、外部下载，安装在本地（内部管理）
+
+| Skill | 来源 | ClawHub Slug | 版本 | 备注 |
+|-------|------|-------------|------|------|
+| `self-improving` | `ivangdavila` | `self-improving` | 1.2.16 | |
+| `proactivity` | `ivangdavila` | `proactivity` | 1.0.1 | |
+| `agent-browser` | 外部下载 | `agent-browser` | 0.2.0 | |
+| `word-docx` | `ivangdavila` | `word-docx` | 1.0.2 | |
+| `excel-xlsx` | `ivangdavila` | `excel-xlsx` | 1.0.2 | |
+| `humanizer` | `biostartechnology` | `humanizer` | 1.0.0 | |
+| `7habits-operations-guide` | 外部下载 | — | — | 内部管理 |
+| `aabao-gemini-img2img` | 外部下载 | — | — | 内部管理 |
+| `conversation-summarizer` | 外部下载 | — | — | 内部管理 |
+| `gog` | 外部下载 | — | — | 内部管理 |
+| `inventory-ledger-splitter` | 外部下载 | — | — | 内部管理 |
+| `job-hunt-orchestrator` | 外部下载 | — | — | 内部管理 |
+| `model-config` | 外部下载 | — | — | 内部管理 |
+| `operations-advisor` | 外部下载 | — | — | 内部管理 |
+| `unraid-dockerman-xml-deploy` | 外部下载 | — | — | 内部管理 |
+| `unraid-xml-generator` | 外部下载 | — | — | 内部管理 |
+
+---
+
+## ClawHub 实际安装状态（截至 2026-04-06）
+
+```
+agent-browser   0.2.0
+sure-api       1.0.0    ← 自建
+word-docx      1.0.2
+excel-xlsx     1.0.2
+self-improving 1.2.16
+proactivity    1.0.1
+humanizer     1.0.0
+```
+
+> 注：外部的 `vikunja-fast`（tmigone）和 `self-improving-agent`（pskoett）已卸载。`vikunja-task-api`（我们自建）的本地版本存在于 `~/.openclaw/workspace/skills/vikunja-fast/` 目录（v2.5.0），未在 ClawHub 安装列表中。
+
+---
+
+## 发布/更新流程
 
 ```bash
 # 1. 在 /tmp/openclaw-person-skills 更新文件
@@ -108,10 +122,16 @@ clawhub publish skills/[skill-name] \
   --version X.X.X \
   --tags "..." \
   --changelog "..."
+
+# 4. 克隆到本地私人仓库备份
+cd /tmp/private-life
+git clone https://github.com/ashanzzz/private-life.git
+# 手动复制要备份的 skill 文件进去
+git push
 ```
 
 ---
 
 ## 更新日志
 
-- 2026-04-06：初建，确认5个技能已发布 ClawHub（deep-research/vikunja-task-api/skill-vetter/unraidclaw/sure-api），其余自建技能内部管理
+- 2026-04-06：核实全部技能来源，清理孤儿记录（`proactive-agent-skill`、`proactive-agent`、`self-improving-agent`、`vikunja-fast`），确认 `sure-api` 和 `vikunja-task-api` 为自建技能
