@@ -1,6 +1,6 @@
 # Repository Index
 
-最后更新：2026-04-03
+最后更新：2026-04-06
 
 ## 1) Repository Policy
 
@@ -17,6 +17,7 @@
 
 | Skill | Purpose |
 |---|---|
+| `skills/deep-research` | 深度研究方法论：8步研究流程+4级来源可信度+多源交叉核实 |
 | `skills/books-growth-advisor` | 基于9本管理书回答职业发展/工厂/管理/人际问题 |
 | `skills/repo-structure-manager` | 仓库目录治理、清理、发布边界控制 |
 | `skills/book-learner` | 图书切片阅读与笔记生成流程 |
