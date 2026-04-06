@@ -50,7 +50,7 @@
 | `repo-structure-manager` | **自建** | 仓库结构治理 |
 | `news-tracker` | **自建** | 新闻追踪存档 |
 
-> 注：以上技能中，仅 4 个已发布到 ClawHub，其余为内部管理，不上传。
+> 注：以上技能中，5个已发布到 ClawHub，其余为内部管理，不上传。
 
 ---
 
@@ -72,7 +72,6 @@
 | `proactivity` | 外部下载 | 主动工作流 |
 | `self-improving` | 外部下载 | 自学习 |
 | `self-improving-agent` | 外部下载 | 自学习 agent |
-| `sure-api` | 外部下载 | we-promise/sure API |
 | `unraid-dockerman-xml-deploy` | 外部下载 | Unraid Docker XML 部署 |
 | `unraid-xml-generator` | 外部下载 | Unraid XML 模板生成 |
 | `vikunja-fast` | 外部下载 | vikunja-task-api 简化版 |
@@ -91,6 +90,7 @@
 | `vikunja-task-api` | `ashanzzz-vikunja-task-api` | 2.4.0 | ✅ 已发布 |
 | `skill-vetter` | `ashanzzz-skill-vetter` | 1.2.0 | ✅ 已发布 |
 | `unraidclaw` | `ashanzzz-unraidclaw` | 1.2.0 | ✅ 已发布 |
+| `sure-api` | `sure-api` | 1.0.0 | ✅ 已发布 |
 | 其余自建技能 | — | — | 🚫 内部管理，不上传 |
 
 ### 发布/更新流程
@@ -114,4 +114,4 @@ clawhub publish skills/[skill-name] \
 
 ## 更新日志
 
-- 2026-04-06：初建，确认4个技能已发布 ClawHub，其余自建技能内部管理
+- 2026-04-06：初建，确认5个技能已发布 ClawHub（deep-research/vikunja-task-api/skill-vetter/unraidclaw/sure-api），其余自建技能内部管理
