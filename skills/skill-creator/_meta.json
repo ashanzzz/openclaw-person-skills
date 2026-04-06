@@ -1,0 +1,8 @@
+{
+  "name": "ashan-skill-creator",
+  "version": "1.0.0",
+  "description": "创建、编辑、改进或审核 OpenClaw AgentSkill 的完整指南，包含六步流程、工具脚本和渐进式披露设计原则。",
+  "license": "MIT-0",
+  "tags": ["openclaw", "skill", "creator", "authoring", "workflow"],
+  "scripts": ["init_skill.py", "package_skill.py", "quick_validate.py"]
+}

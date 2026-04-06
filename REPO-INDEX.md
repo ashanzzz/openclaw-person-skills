@@ -31,6 +31,7 @@
 | `skills/purchase-invoice-classifier` | 采购发票分类 |
 | `skills/purchase-wire-transfer-reconcile` | 采购电汇对账 |
 | `skills/reconcile-output-format` | 对账输出格式化 |
+| `skills/skill-creator` | OpenClaw Skill 创建/编辑/审核完整指南（，六步流程+工具脚本+渐进式披露原则） |
 | `skills/vikunja-task-api` | Vikunja API 任务管理 |
 
 ## 3) Runtime data placement (outside this repo)
