@@ -1,15 +1,32 @@
 ---
 name: vikunja-task-api
 version: 2.3.0
-description: Full Vikunja v2 API integration — projects, tasks, labels, teams, views, comments, attachments, bulk operations, and more.
+description: |
+  Install: clawhub install ashanzzz-vikunja-task-api
+
+  Full Vikunja v2 API integration — projects, tasks, labels, teams, views, comments, attachments, bulk operations, and more.
 homepage: https://vikunja.io/
 metadata: {"clawdbot":{"emoji":"📋","requires":{"bins":["curl","jq"],"env":["VIKUNJA_URL"],"optionalEnv":["VIKUNJA_TOKEN","VIKUNJA_USERNAME","VIKUNJA_PASSWORD"]},"primaryEnv":"VIKUNJA_TOKEN"}}
 ---
 
 # Vikunja Task API Skill
 
-> **For detailed installation instructions (human + AI agent), see [INSTALL.md](./INSTALL.md)**
-> Quick setup: `clawhub install ashanzzz-vikunja-task-api` or see INSTALL.md
+## Install
+
+```bash
+clawhub install ashanzzz-vikunja-task-api
+```
+
+Then set environment variables:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VIKUNJA_URL` | Yes | Vikunja 实例地址，如 `http://192.168.8.11:3456` |
+| `VIKUNJA_TOKEN` | Recommended | API Token（优先）或用户名/密码 |
+| `VIKUNJA_USERNAME` | Alt | 用户名（TOKEN 未设置时使用） |
+| `VIKUNJA_PASSWORD` | Alt | 密码（TOKEN 未设置时使用） |
+
+> For detailed setup, see the **Setup After Install** section below.
 
 ## Quick Setup
 
