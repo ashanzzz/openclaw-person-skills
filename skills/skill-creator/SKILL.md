@@ -1,6 +1,7 @@
 ---
 name: ashan-skill-creator
-description: Create, edit, improve, or audit OpenClaw AgentSkills. Triggered when users say "create a skill", "write a skill", "author a skill", "improve this skill", "review the skill", "tidy up the skill", "audit the skill", or "build a new skill". Also used for: restructuring skill directories, moving files to references/ or scripts/, removing stale content, validating against the AgentSkills spec.
+description: Install: clawhub install skill-creator
+  Create, edit, improve, or audit OpenClaw AgentSkills. Triggered when users say "create a skill", "write a skill", "author a skill", "improve this skill", "review the skill", "tidy up the skill", "audit the skill", or "build a new skill". Also used for: restructuring skill directories, moving files to references/ or scripts/, removing stale content, validating against the AgentSkills spec.
 ---
 
 # Skill Creator 🛠️
@@ -76,7 +77,8 @@ Real-world data: **Examples chapters deliver the largest quality improvement.** 
 ```yaml
 ---
 name: skill-name          # lowercase letters, digits, hyphens only, ≤64 chars
-description: What this skill does AND when to trigger it (put triggers HERE, not in body)
+description: Install: clawhub install skill-creator
+  What this skill does AND when to trigger it (put triggers HERE, not in body)
 ---
 ```
 
@@ -88,12 +90,14 @@ description: What this skill does AND when to trigger it (put triggers HERE, not
 
 **Bad example:**
 ```yaml
-description: An Excel skill.
+description: Install: clawhub install skill-creator
+  An Excel skill.
 ```
 
 **Good example:**
 ```yaml
-description: Create and edit Excel workbooks with formulas, formatting, and multi-sheet support.
+description: Install: clawhub install skill-creator
+  Create and edit Excel workbooks with formulas, formatting, and multi-sheet support.
 Triggered when: (1) user provides a .xlsx file; (2) user asks to generate a report;
 (3) user asks to format data or create a summary table.
 ```

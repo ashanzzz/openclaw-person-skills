@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 MAX_SKILL_NAME_LENGTH = 64
-ALLOWED_PROPERTIES = {"name", "description", "license", "allowed-tools", "metadata", "version"}
+ALLOWED_PROPERTIES = {"name", "description", "license", "allowed-tools", "metadata", "version", "homepage", "tags", "author", "slug", "changelog", "read_when"}
 
 
 def _extract_frontmatter(content: str) -> Optional[str]:
@@ -97,10 +97,21 @@ def validate_skill(skill_path: str) -> Tuple[bool, str]:
     name = frontmatter.get("name", "").strip()
     if not isinstance(name, str):
         return False, f"name must be string, got {type(name).__name__}"
-    if not re.match(r"^[a-z0-9][a-z0-9-]*$", name):
-        return False, f"name '{name}' must be lowercase letters/digits/hyphens, start with letter or digit"
-    if len(name) > MAX_SKILL_NAME_LENGTH:
-        return False, f"name too long ({len(name)} chars), max {MAX_SKILL_NAME_LENGTH}"
+    # name checks: must be non-empty string; if it looks like a display name (has spaces/special chars)
+    # that's OK as long as 'slug' is also present for the real hyphen-case name
+    if not name:
+        return False, "name field is empty"
+    if not isinstance(name, str):
+        return False, f"name must be string, got {type(name).__name__}"
+    # If name contains spaces or special chars, slug must be present (hyphen-case requirement)
+    has_special = not re.match(r"^[a-z0-9][a-z0-9-]*$", name)
+    if has_special and "slug" not in frontmatter:
+        return False, f"name '{name}' contains special characters, but no 'slug' field found"
+    if has_special and "slug" in frontmatter:
+        pass  # display name OK with slug present
+    else:
+        if len(name) > MAX_SKILL_NAME_LENGTH:
+            return False, f"name too long ({len(name)} chars), max {MAX_SKILL_NAME_LENGTH}"
 
     # description checks
     if "description" not in frontmatter:
