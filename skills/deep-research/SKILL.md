@@ -1,312 +1,389 @@
-# Deep Research Skill
+---
+name: deep-research
+description: |
+  Install: clawhub install deep-research
 
-> Multi-source research methodology — executes when user asks "研究/调查/搜索" or similar research tasks. Supports 3-day research cache + auto-archive to MEMORY.md.
+  Multi-source research methodology. Executes when user asks "研究/调查/搜索" or similar research tasks.
+  Supports 3-day research cache + auto-archive to MEMORY.md.
+  Provides: 10-step research flow, 4-level source credibility, adversarial challenge, query planning, and user review nodes.
+---
+
+# Deep Research 🕵️
+
+A rigorous, multi-source research system with built-in adversarial thinking and user collaboration.
 
 ---
 
-## Research Cache System（研究缓存系统）
+## Core Principles
 
-### 工作原理
-
-每次研究启动时，在 `/tmp/deep-research-cache/{slugified_topic}/{unix_timestamp}/` 下创建独立工作目录：
-
-```
-/tmp/deep-research-cache/
-  {topic-slug}/
-    {timestamp}/
-      claims/          ← 每条证据卡（claim_NNN.md）
-      rounds/          ← 每轮研究日志（round_NNN.md）
-      manifest.json    ← 所有证据的索引 + 可信度统计
-      report_final.md  ← 最终报告
-      .cleanup_scheduled ← 3天清理倒计时标记
-```
-
-### 3天清理逻辑
-
-1. `finalize.sh` 生成报告后，写入 `.cleanup_scheduled` 标记（记录"报告生成时间"）
-2. `cleanup.sh` 每运行一次，检查所有研究目录：
-   - **有活动**（用户在3天内继续研究，新增加了 claim/round）→ 删除 `.cleanup_scheduled`，取消清理计划
-   - **无活动**且距报告生成已 > 3天 → 将摘要写入 `MEMORY.md`，删除整个目录
-3. `MEMORY.md` 写入内容：主题 + 日期 + 核心结论（1-3句）+ T1/T2/T3/T4 来源统计 + 完整报告所在路径（待删除前还有效）
-
-### 如何继续研究
-
-用户只需说"**继续研究{原话题}**"，AI agent 会：
-1. 找到 `/tmp/deep-research-cache/` 下该 topic 的**最新目录**
-2. 从 manifest.json 读取已有证据
-3. 在最新目录继续追加 claim + round
-4. 更新 manifest + 重新生成报告
-
-> **注意**：完整报告在清理前仅存在于 `/tmp/deep-research-cache/`，不复制到 workspace。如需保留报告，请告知用户或主动复制到 workspace。
+1. **Plan before searching** — Never start blindly; list your queries first
+2. **Multi-source cross-verification** — Every key conclusion needs 3 independent sources
+3. **Source tiering** — T1/T2 first; T3/T4 only with extra scrutiny
+4. **Adversarial thinking** — Actively challenge your own conclusions before reporting
+5. **User in the loop** — Report at key milestones so direction can be corrected early
+6. **Explicit uncertainty** — Never fabricate; mark every unknown clearly
 
 ---
 
-## 触发条件
+## Research Cache System
 
-用户说以下类型的话时触发：
-- "帮我研究一下..."
-- "你去查一查..."
-- "搜索..." + 涉及多个来源的问题
-- "帮我调查..."
-- "核实..."
-- "确认一下..."
-- "继续研究..."
+### Directory Structure
 
-**注意**：简单的事实查询（"今天天气如何"）不需要触发此技能。
+```
+/tmp/deep-research-cache/{topic-slug}/{unix_timestamp}/
+  queries/       ← Planned search queries (generated before searching)
+  claims/       ← Evidence cards (one per claim)
+  rounds/       ← Research round logs
+  challenge/    ← Adversarial challenge notes
+  manifest.json ← All evidence indexed + statistics
+  report_draft.md ← Draft report (before challenge)
+  report_final.md ← Final report (after challenge + user review)
+  .cleanup_scheduled ← 3-day cleanup marker
+```
+
+### 3-Day Cleanup Logic
+
+1. `finalize.sh` writes `.cleanup_scheduled` marker after draft report
+2. `cleanup.sh` checks all research dirs on schedule:
+   - **Active** (user continued within 3 days) → delete marker, cancel cleanup
+   - **Inactive** for >3 days → archive summary to `MEMORY.md`, delete dir
+3. `MEMORY.md` content: topic + date + core conclusions + T1/T2/T3/T4 counts + report path (valid until cleanup)
+
+### Continuing Research
+
+User says "继续研究{原话题}" → Agent:
+1. Finds latest dir under `/tmp/deep-research-cache/{slug}/`
+2. Reads `manifest.json` to see what claims/rounds already exist
+3. Continues from where it left off, adding new rounds + claims
+4. Updates manifest + re-runs finalize if conclusions changed
 
 ---
 
-## 核心原则
+## Source Credibility (4-Tier)
 
-1. **不搜到哪算哪** — 研究开始前先制定搜索计划
-2. **多源交叉验证** — 每个关键结论至少 3 个独立来源
-3. **来源分级可信度** — 优先使用高可信度来源
-4. **反复核实** — 同一事实用不同关键词核实至少 2 次
-5. **明确存疑** — 无法核实的内容必须标注，不得臆造
+| Tier | Type | Weight | Rule |
+|------|------|--------|------|
+| **T1** | Official docs / academic papers / primary data / official APIs | Highest | Use as primary evidence; cite directly |
+| **T2** | Authoritative media / industry reports / official announcements | High | Cross-check with T1; use as supporting evidence |
+| **T3** | Tech blogs / community discussions / GitHub Issues | Medium | Requires extra verification; use as leads only |
+| **T4** | Social media / forums / untraceable citations | Low | Almost never use as evidence; only as leads |
 
----
-
-## 来源可信度分级（4级）
-
-| 等级 | 类型 | 权重 | 说明 |
-|------|------|------|------|
-| **T1** | 官方文档/学术论文/一手数据/官方API | 最高 | 原始出处，未经转述 |
-| **T2** | 权威媒体报道/行业白皮书/官方公告 | 高 | 经核实的主流权威来源 |
-| **T3** | 技术博客/社区讨论/垂直论坛/GitHub Issues | 中 | 需要额外核实，可作为线索 |
-| **T4** | 社交媒体/论坛/无法溯源的引用 | 低 | 极度存疑，仅作辅助线索 |
-
-**优先级规则**：T1 > T2 > T3 > T4。优先使用 T1/T2；T3/T4 必须与 T1/T2 交叉验证。
+**Rule:** Priority T1 > T2 > T3 > T4. T3/T4 must be validated against T1/T2 before reporting.
 
 ---
 
-## 研究流程（8步）
+## Research Flow (10 Steps)
 
-### Step 0：问题类型识别
+### Step 0: Problem Type Identification
 
-拿到问题后，先判断属于哪类：
+Identify the type before anything else:
 
-| 类型 | 特征 | 示例 |
-|------|------|------|
-| **事实型** | 有明确答案，可直接查证 | "XX工具的最新版本号" |
-| **比较型** | 需要多维度对比 | "A工具 vs B工具，哪个更好" |
-| **探索型** | 开放性，需要归纳 | "XX行业的市场趋势是什么" |
-| **操作型** | 需要步骤指引 | "如何在XX上配置XX" |
+| Type | Characteristics | Example |
+|------|---------------|---------|
+| **Factual** | Has a definite answer | "What is the latest version of XX?" |
+| **Comparative** | Needs multi-dimension comparison | "Tool A vs Tool B — which is better?" |
+| **Exploratory** | Open-ended, needs synthesis | "What are the market trends for XX?" |
+| **Operational** | Needs step-by-step guidance | "How to configure XX on YY?" |
 
-### Step 0.5：时效性评估（AI/科技类必做）
+### Step 0.5: Query Planning (BLOCKING — do this BEFORE searching)
 
-- AI/科技/开源项目话题：**先核实信息时效性**
-- 搜索时优先看最新发布的内容（近6个月内）
-- 明确标注每条信息的发布时间
-- **如果来源时间不明，该来源可信度降级**
+**Before touching the web**, generate a structured query plan:
 
-### Step 1：问题拆解 & 边界定义
-
-将问题拆解为若干子问题，明确：
-- 研究的范围（什么要查，什么不查）
-- 预期的输出形式
-- 需要查几个维度
-
-### Step 2：来源分级 & 权威锁定
-
-- 针对每个子问题，列出预期可用的来源类型
-- 优先查找 T1/T2 来源
-- 每个关键事实至少找到 2 个不同级别的来源
-
-### Step 3：事实提取 & 证据卡
-
-每个关键结论提取为"证据卡"：
 ```
-[证据卡]
-- 结论：...
-- 来源：[来源名称]（[等级]，[时间]）
-- 原文摘要：...
-- 可信度：✅确认 / ⚠️存疑 / ❌矛盾
+[Query Plan]
+## Research Questions
+1. [Specific question A] → Search queries: ["A exact phrase", "A from T1 source", "A verification"]
+2. [Specific question B] → Search queries: [...]
+3. ...
+
+## Coverage Check
+- Does this query set cover all aspects of the topic? [YES/NO — add if NO]
+- Are queries diverse enough (different angles/sources)? [YES/NO — add if NO]
 ```
 
-**使用缓存系统时，每张证据卡通过 `claim-card.sh` 写入缓存目录。**
+**Generate at least 5-8 queries per research topic.** Use the `query-planner.sh` script to help:
 
-### Step 4：构建对比框架
-
-比较型问题必须建立对比矩阵：
-```
-[对比维度]
-| 维度 | 来源A | 来源B | 来源C | 结论 |
-|------|-------|-------|-------|------|
+```bash
+TOPIC="your research topic" bash scripts/query-planner.sh
 ```
 
-### Step 5：参考对齐 & 冲突处理
+> **Why this matters:** Blind searching leads to confirmation bias. Planning queries first ensures systematic coverage.
 
-- 同一事实多个来源结论一致 → ✅ 确认
-- 多个来源结论矛盾 → ⚠️ 标注冲突，明确说明各方说法
-- 仅单一来源 → ⚠️ 标注"单来源，待验证"
+### Step 0.75: Time-Sensitivity Check (BLOCKING for AI/tech topics)
 
-### Step 6：事实→结论推导链
+For AI / tech / open-source topics:
+- Check if any source is older than 6 months
+- Mark every piece of evidence with its publication date
+- **If a source's age is unknown → downgrade it one tier**
 
-明确推导过程：
+### Step 1: Problem Decomposition
+
+Break the topic into sub-questions aligned with the Query Plan:
+- What must be answered?
+- What is in scope / out of scope?
+- What is the expected output format?
+- How many dimensions need to be covered?
+
+### Step 2: Authority Locking
+
+For each sub-question:
+- List expected T1/T2 source types
+- Identify the most authoritative sources to check first
+- Flag if a T1 source is unavailable (note this gap)
+
+### Step 3: Evidence Collection & Claim Cards
+
+For every conclusion found, write a claim card via `claim-card.sh`:
+
+```bash
+CLAIM_ID="claim_001" \
+CONTENT="specific conclusion..." \
+SOURCE="https://..." \
+SOURCE_TIER="T2" \
+PUBLISHED_AT="2024-03" \
+VERIFICATION_STATUS="pending" \
+ROUND="1" \
+CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
+bash scripts/claim-card.sh
 ```
-结论X ← 依据事实A（来源）+ 依据事实B（来源）
-         推导逻辑：[为什么A+B得出X]
+
+After each research round:
+```bash
+bash scripts/manifest.sh
 ```
 
-### Step 6.5：独立核实（BLOCKING 步骤）
+### Step 4: Build Comparison Framework (for comparative questions)
 
-**在输出结论前，必须完成此步骤：**
-- 用**不同关键词**重新搜索关键结论，验证一致性
-- 每个关键结论至少核实 **2 次**（不同来源或不同角度）
-- 如果核实结果与原结论矛盾 → 返回 Step 5 重新评估
-- 完成后才可进入 Step 7
+If comparing things, build a comparison matrix:
 
-### Step 7：使用场景验证（合理性检查）
+| Dimension | Source A | Source B | Source C | Verdict |
+|----------|---------|---------|---------|---------|
 
-- 结论是否符合常识？
-- 是否存在明显的反例？
-- 对用户的实际场景是否适用？
+### Step 5: Reference Alignment & Conflict Resolution
 
-### Step 8：输出格式化
+| Situation | Action |
+|-----------|--------|
+| Multiple sources agree | ✅ Mark verified, elevate confidence |
+| Sources conflict | ⚠️ Note each viewpoint, mark as "contradicted pending resolution" |
+| Single source only | ⚠️ Mark "single-source — needs 2 more verifications" |
 
-按以下格式交付（详见下方输出模板）。报告由 `finalize.sh` 生成。
+### Step 6: Fact → Conclusion Derivation Chain
+
+Make every derivation explicit:
+```
+Conclusion X
+  ← Based on Fact A (Source: ..., T1, 2024-02) + Fact B (Source: ..., T2, 2023-11)
+     Derivation logic: [Explain why A + B → X]
+```
+
+### Step 6.5: Adversarial Challenge (BLOCKING — do before draft report)
+
+**Before writing the draft report, actively challenge your own conclusions.**
+
+Create a `challenge/` note for each major conclusion:
+
+```
+[Challenge for: Conclusion X]
+- What is the weakest part of this conclusion?
+- What source could disprove this?
+- What would make me abandon this conclusion?
+- Is there a plausible alternative explanation?
+- Is this conclusion shaped by which sources I happened to find?
+
+Answer each question honestly. If any answer reveals a serious flaw → return to Step 3 to collect more evidence.
+```
+
+Use `scripts/challenge.sh` to generate the challenge framework:
+
+```bash
+CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" bash scripts/challenge.sh
+```
+
+### Step 7: Source Diversity Check
+
+For each major conclusion, assess:
+- How many different source domains/立场 contributed? (academia? industry? government? independent?)
+- Is the evidence base diverse, or did I just find what I expected to find?
+- If sources are homogeneous → flag as "homogeneous evidence — treat as tentative"
+
+Add to the challenge note:
+```
+Source diversity score: X/Y
+  Domains: [list]
+  If X < 2: flag as low-diversity, treat conclusion as tentative
+```
+
+### Step 8: Draft Report (User Review Node ⭐)
+
+**Before the final report, deliver a draft and ask for user input.**
+
+> "I've completed the research draft. Before I finalize, I want to confirm the direction is right.
+>
+> **Core findings (3 points):**
+> 1. [Finding A] — confidence: 🟢/🟡/🔴
+> 2. [Finding B] — confidence: ...
+> 3. [Finding C] — confidence: ...
+>
+> **Key uncertainties:**
+> - [Unverified claim]
+> - [Conflicting sources on X]
+>
+> **Does this direction match what you were looking for? Any adjustments before I finalize?**"
+
+This is critical — a 5-minute user check here prevents wasted research in the wrong direction.
+
+### Step 9: Finalize & Deliver
+
+After user confirms (or after reasonable wait):
+```bash
+bash scripts/finalize.sh
+```
+
+Output follows the **Final Report Template** below.
 
 ---
 
-## 输出模板
+## Final Report Template
 
 ```markdown
-# 研究报告：[问题标题]
+# 研究报告：[Topic]
 
 ## 研究概要
-- 问题类型：
-- 研究时间：
-- 来源数量：X 个（ T1:X / T2:X / T3:X / T4:X ）
-- 核心结论（1-3句话）：
+- **类型**：[Factual / Comparative / Exploratory / Operational]
+- **时间**：[YYYY-MM-DD]
+- **来源**：N 个（ T1:N / T2:N / T3:N / T4:N ）
+- **核心结论**（1-3句）：
+
+---
 
 ## 关键结论
 
 ### 结论1：[标题]
-- 置信度：🟢 高 / 🟡 中 / 🔴 低
-- 证据：
+- **置信度**：🟢 高 / 🟡 中 / 🔴 低
+- **可信度分**：X/Y（来源多样性评分）
+- **证据**：
   - [来源A]（T1，2024年）— ...
   - [来源B]（T2，2023年）— ...
-  - [来源C]（T3，2024年）— ...
-- 多源核实：[✅ 一致 / ⚠️ 存疑 / ❌ 矛盾]
-- 对用户场景的意义：...
+- **核实状态**：✅ 已确认 / ⚠️ 待核实 / ❌ 矛盾
+- **推导链**：Fact A + Fact B → 结论
+- **对用户的意义**：...
 
-### 结论2：（同上格式）
+### 结论2：（同上）
+
+---
 
 ## 存疑项 & 待验证
-- ❓ [未核实清楚的点] — 来源：[来源]，风险：[...]
-- ❓ [需要用户确认的内容]
+- ❓ [未核实清楚的点] — 风险：... — 建议：...
+- ❓ [发布时间超过6个月的数据] — 建议核实时效性
+
+---
+
+## 对抗性质疑记录
+[从 Step 6.5 输出一段：最容易被挑战的点 + 如何处理]
+
+---
 
 ## 研究局限性
-- [本次研究的局限]
-- [未覆盖的范围]
+- [本次未覆盖的范围]
+- [方法的局限性]
+
+---
 
 ## 主要参考来源
-1. [来源名] — [URL/平台] — [T1/T2/T3/T4]
+1. [来源名] — [URL] — [T1/T2/T3/T4]
 2. ...
 
 ---
-*本报告基于多源交叉核实，如有疑问请标注具体结论反馈核实。*
+*本报告经过多源核实 + 对抗性质疑。如有疑问请标注具体结论。*
 ```
 
 ---
 
-## 核实次数最低要求
+## Verification Minimum Requirements
 
-| 结论来源等级 | 最少核实次数 |
-|-------------|------------|
-| T1 单一来源 | 2 次不同关键词/角度核实 |
-| T2 单一来源 | 2 次不同来源核实 |
-| T1 + T2 多源一致 | 1 次额外核实 |
-| T3/T4 结论 | **必须**升级到 T1/T2 来源，否则标注"低可信度" |
+| Evidence Tier | Minimum Verifications |
+|-------------|----------------------|
+| T1 single source | 2 independent re-checks |
+| T2 single source | 2 different sources |
+| T1 + T2 multi-source agree | 1 extra check |
+| T3 / T4 | **Must upgrade** to T1/T2 or mark "low credibility" |
 
 ---
 
-## 脚本使用指南
+## Scripts Reference
 
-### 启动研究
+| Script | Purpose |
+|--------|---------|
+| `research.sh` | Initialize research session + cache dir |
+| `query-planner.sh` | Generate structured query plan before searching |
+| `claim-card.sh` | Write one evidence card |
+| `manifest.sh` | Rebuild manifest.json from all claim cards |
+| `challenge.sh` | Generate adversarial challenge framework |
+| `finalize.sh` | Generate draft report (triggers user review) |
+| `report_final.sh` | Generate final polished report (after user confirms) |
+| `cleanup.sh` | 3-day auto-archive check |
+
+### Usage
 
 ```bash
-cd /root/.openclaw/workspace/skills/deep-research/scripts
-TOPIC="你的研究主题" SESSION_ID="可选ID" bash research.sh
-```
+# 1. Initialize
+TOPIC="research topic" SESSION_ID="optional" bash scripts/research.sh
 
-### 记录证据卡
+# 2. Plan queries first (BEFORE searching)
+TOPIC="research topic" bash scripts/query-planner.sh
 
-```bash
-CLAIM_ID="claim_001" \
-TOPIC="研究主题" \
-CONTENT="具体结论内容..." \
-SOURCE="https://..." \
-SOURCE_TIER="T2" \
-VERIFICATION_STATUS="pending" \
-ROUND="1" \
-CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
-bash claim-card.sh
-```
+# 3. Search, then record each claim
+CLAIM_ID="claim_001" CONTENT="..." SOURCE="..." SOURCE_TIER="T2" \
+  PUBLISHED_AT="2024-03" VERIFICATION_STATUS="pending" \
+  ROUND="1" CACHE_DIR="..." bash scripts/claim-card.sh
 
-### 更新索引
+# 4. After each round, update manifest
+CACHE_DIR="..." TOPIC="..." SESSION_ID="..." bash scripts/manifest.sh
 
-```bash
-CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
-TOPIC="研究主题" \
-SESSION_ID="xxx" \
-bash manifest.sh
-```
+# 5. Before draft report, run adversarial challenge
+CACHE_DIR="..." bash scripts/challenge.sh
 
-### 生成报告
-
-```bash
-CACHE_DIR="/tmp/deep-research-cache/xxx/xxx" \
-TOPIC="研究主题" \
-SESSION_ID="xxx" \
-bash finalize.sh
-```
-
-### 清理检查（可定时运行）
-
-```bash
-bash cleanup.sh
+# 6. Generate final report
+CACHE_DIR="..." TOPIC="..." SESSION_ID="..." bash scripts/finalize.sh
 ```
 
 ---
 
-## 触发此技能时的用户沟通规则
+## Communication Rules
 
-**研究开始时**（简短告知）：
-> "收到，我来研究一下。计划：[拆解成X个维度，查找X个来源]，完成后给你完整报告。"
+**At research start:**
+> "收到。我来系统研究一下。计划：[N]个维度，查找[N]个来源，预计需要[N]步。完成初稿后我会先给你确认方向，再出最终报告。"
 
-**研究过程中**（如果发现方向偏差）：
-> "我发现原问题的方向可能需要调整——[说明原因]，建议改成[新方向]，可以吗？"
+**If direction needs adjustment (after draft):**
+> "初稿方向是[...]，但我发现[原因]，建议调整为[新方向]，可以吗？"
 
-**完成时**：按上方模板输出完整报告，并告知：
-> "报告已生成，缓存保留3天，如继续研究请在3天内继续对话。"
-
----
-
-## 质量门控
-
-以下情况必须**不上报结论**，先继续研究：
-- 关键结论不足 3 个来源
-- 存在未解决的来源冲突
-- 时效性无法确认（AI/科技类）
-
-以下情况**必须标注"存疑"**：
-- 单一来源
-- 来源为 T3/T4
-- 发布时间超过 1 年（科技类话题）
-- 不同来源结论存在分歧
+**At completion:**
+> "报告已生成。关于[存疑项]，建议你自己再核实一下[具体点]。报告缓存在[path]，保留3天。"
 
 ---
 
-## Self-Improving 集成
+## Self-Improving Integration
 
-每次研究完成后，在 `.learnings/research-log.md` 追加一条：
+After each research, append to `~/.self-improving/domains/research.md`:
 ```
-[日期] | 问题：[主题] | 来源数：X | 质量：🟢/🟡/🔴 | 教训：[如果有]
+[YYYY-MM-DD] | Topic: [X] | Sources: N (T1:N T2:N T3:N T4:N) | Quality: 🟢/🟡/🔴 | Lesson: [如果有]
 ```
 
-如果研究过程中发现方法论问题 → 更新本 SKILL.md。
+If the methodology itself needs improvement → update this SKILL.md.
 
 ---
 
-*本技能参考 wshuyi/deep-research 方法论 + 学术来源可信度分级体系构建。*
+## What Makes This "Perfect" Research
+
+- ✅ Query plan first, searching second
+- ✅ User in the loop before final report
+- ✅ Adversarial challenge before reporting
+- ✅ Explicit derivation chains (no black-box conclusions)
+- ✅ Source diversity scored per conclusion
+- ✅ Contradictions explicitly marked, not hidden
+- ✅ Cache enables continuing research seamlessly
+- ✅ 3-day auto-archive keeps MEMORY.md fresh
+
+---
+
+*This skill is inspired by wshuyi/deep-research methodology + arXiv surveys on Deep Research Agents.*
