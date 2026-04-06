@@ -91,6 +91,75 @@
 
 ---
 
+## 同步方式说明
+
+| 同步目标 | 内容 | 同步方式 |
+|---------|------|---------|
+| **本地 workspace** | 所有技能的工作副本 | 实时读写，`~/.openclaw/workspace/skills/` |
+| **GitHub 公共仓库** | 公开分享的技能 | `git push` 到 `ashanzzz/openclaw-person-skills` |
+| **ClawHub** | 公共技能市场 | `clawhub publish` 发布/更新 |
+| **GitHub 私人仓库** | 私人资产备份 | `git push` 到 `ashanzzz/private-life` |
+
+## 同步状态追踪
+
+### 同步到 ClawHub（公共技能市场）
+
+| Skill | ClawHub Slug | 版本 | 状态 |
+|-------|--------------|------|------|
+| `deep-research` | `ashanzzz-deep-research` | 1.2.0 | ✅ 已发布 |
+| `vikunja-task-api` | `ashanzzz-vikunja-task-api` | 2.4.0 | ✅ 已发布 |
+| `skill-vetter` | `ashanzzz-skill-vetter` | 1.2.0 | ✅ 已发布 |
+| `unraidclaw` | `ashanzzz-unraidclaw` | 1.2.0 | ✅ 已发布 |
+| `books-growth-advisor` | — | — | ⏳ 待发布 |
+| `erpnext-monthly-invoice-export` | — | — | ⏳ 待发布 |
+| `erpnext-invoice-detail-export` | — | — | ⏳ 待发布 |
+| `finance-reconcile-workbook` | — | — | ⏳ 待发布 |
+| `finance-remark-mapping` | — | — | ⏳ 待发布 |
+| `purchase-wire-transfer-reconcile` | — | — | ⏳ 待发布 |
+| `purchase-invoice-classifier` | — | — | ⏳ 待发布 |
+| `reconcile-output-format` | — | — | ⏳ 待发布 |
+| `book-learner` | — | — | ⏳ 待发布 |
+| `book-audit` | — | — | ⏳ 待发布 |
+| `book-notes-sop` | — | — | ⏳ 待发布 |
+| `repo-structure-manager` | — | — | ⏳ 待发布 |
+| `news-tracker` | — | — | ⏳ 待发布 |
+
+### 同步到 GitHub 公共仓库（openclaw-person-skills）
+
+- **推送**：`git push` 到 `https://github.com/ashanzzz/openclaw-person-skills`
+- **状态**：所有自建技能均已在此仓库
+
+### 同步到 GitHub 私人仓库（private-life）
+
+- **推送**：`git push` 到 `https://github.com/ashanzzz/private-life`
+- **内容**：私人技能备份（如 deep-research SKILL.md）
+- **状态**：私人资产按需备份
+
+### 本地 workspace（~/.openclaw/workspace/skills/）
+
+- 所有技能的工作副本均在此
+- 自建 + 外部下载技能混合存放
+- **重要**：本地有但不在 `openclaw-person-skills` 的技能 = 外部下载或私人技能
+
+---
+
+## 发布/更新流程
+
+```bash
+# 1. 在本地 /tmp/openclaw-person-skills 更新文件
+
+# 2. 推送到 GitHub
+cd /tmp/openclaw-person-skills
+git add -A
+git commit -m "feat: ..."
+git push
+
+# 3. 发布/更新到 ClawHub
+clawhub publish skills/[skill-name] --slug ashanzzz-[slug] --version X.X.X --tags "..." --changelog "..."
+```
+
+---
+
 ## 更新日志
 
 - 2026-04-06：初建，根据 commit 历史和对话记录初步判断来源，标注待确认项
