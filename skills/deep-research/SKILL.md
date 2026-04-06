@@ -1,4 +1,14 @@
+---
+name: deep-research
+version: 1.1.0
+description: Deep Research Methodology — 8-step systematic research process with 4-tier source credibility, multi-source cross-verification, and blocking rules.
+metadata: {"clawdbot":{"emoji":"🔍"}}
+---
+
 # Deep Research Skill
+
+> **For detailed installation instructions (human + AI agent), see [INSTALL.md](./INSTALL.md)**
+> Quick setup: `clawhub install ashanzzz-deep-research` or see INSTALL.md
 
 > 深度研究方法论 — 当用户要求"研究/调查/搜索"时，执行此技能。
 

@@ -1,6 +1,6 @@
 ---
 name: vikunja-task-api
-version: 2.2.0
+version: 2.3.0
 description: Full Vikunja v2 API integration — projects, tasks, labels, teams, views, comments, attachments, bulk operations, and more.
 homepage: https://vikunja.io/
 metadata: {"clawdbot":{"emoji":"📋","requires":{"bins":["curl","jq"],"env":["VIKUNJA_URL"],"optionalEnv":["VIKUNJA_TOKEN","VIKUNJA_USERNAME","VIKUNJA_PASSWORD"]},"primaryEnv":"VIKUNJA_TOKEN"}}
@@ -8,9 +8,10 @@ metadata: {"clawdbot":{"emoji":"📋","requires":{"bins":["curl","jq"],"env":["V
 
 # Vikunja Task API Skill
 
-## Installation (AI Agent / OpenClaw)
+> **For detailed installation instructions (human + AI agent), see [INSTALL.md](./INSTALL.md)**
+> Quick setup: `clawhub install ashanzzz-vikunja-task-api` or see INSTALL.md
 
-### 1. Set Environment Variables
+## Quick Setup
 
 In your OpenClaw workspace, add to `secure/api-fillin.env`:
 
