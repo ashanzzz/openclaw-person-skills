@@ -1,10 +1,12 @@
 ---
 name: purchase-wire-transfer-reconcile
-description: >
+description: |
+  Install: clawhub install purchase-wire-transfer-reconcile
+
   电汇（银行转账）专项匹配技能。将 ERPNext 电汇发票明细 与 银行财务明细 按金额+手续费规则勾稽。
   核心逻辑：银行出账金额 = 发票金额合计 + 手续费（4.5元/笔 或 5元/笔的整数倍）。
   输出格式调用 reconcile-output-format skill。
-何时使用：用户说"电汇核对"、"电汇匹配"、"银行和发票对比"时调用。
+  何时使用：用户说"电汇核对"、"电汇匹配"、"银行和发票对比"时调用。
 ---
 
 # 电汇专项匹配技能

@@ -13,7 +13,7 @@ Complete guide to creating high-quality OpenClaw AgentSkills.
 - User asks to **improve** an existing skill (add structure, examples, remove bloat)
 - User asks to **audit** a skill (check spec compliance, security, completeness)
 - User asks to **organize** a skill (restructure, add references/, add constraints)
-- User asks to **publish** a skill (publish to ClawHub)
+- User asks for guidance on **skill publishing options**
 
 ---
 
@@ -174,14 +174,10 @@ touch skills/<skill-name>/SKILL.md
 - Each step has **clear quality criteria**
 - Include real failure experience (Constraints chapter)
 
-### Step 5: Package & Validate
+### Step 5: Validate
 
 ```bash
-# Validate format
 python3 <skill-creator>/scripts/quick_validate.py <skill-path>
-
-# Package for distribution
-python3 <skill-creator>/scripts/package_skill.py <skill-path> [output-dir]
 ```
 
 Validation checks:
@@ -190,12 +186,18 @@ Validation checks:
 - `description` has no `<` `>` and ≤1024 chars
 - SKILL.md exists and is non-empty
 
-### Step 6: Publish
+### Step 6: Decide on Publishing
 
-**ClawHub publish:**
-```bash
-clawhub publish <skill-path> --slug <your-slug> --version 1.0.0
-```
+**This step is fully optional.** After creating a skill, ask the user whether they want to publish it, and if so, to which platform(s). Do not assume a specific target.
+
+Common publishing options:
+
+| Platform | When to Consider | How |
+|----------|-----------------|-----|
+| **ClawHub** | For sharing skills publicly with the OpenClaw community | `clawhub publish <path> --slug <slug> --version 1.0.0` |
+| **GitHub** | For version control, collaboration, or personal backup | `git init && git add . && git commit` then push to a repo |
+
+> **Note:** If the user has an existing GitHub repo for skills (e.g. `openclaw-person-skills`), prefer syncing there. Do not create new repos without being asked.
 
 ---
 
@@ -216,20 +218,12 @@ Use runtime-safe placeholders:
 
 ### 5.2 MIT-0 License
 
-All public skills must use **MIT-0** (free to use, modify, distribute, no attribution required):
+For skills that will be published publicly, use **MIT-0**:
 ```yaml
 license: MIT-0
 ```
 
-### 5.3 Trigger Phrase Examples
-
-Include real trigger phrases in description:
-```yaml
-description: Triggered when user says "create a new skill", "author a skill",
-"build a skill", "generate an Unraid XML template", or "write a Docker template".
-```
-
-### 5.4 Directory Structure
+### 5.3 Directory Structure
 
 ```
 skill-name/
@@ -264,7 +258,6 @@ For every skill you create or audit, confirm:
 - [ ] `description` has both "what it does" and "when to trigger"?
 - [ ] `description` contains no `<` or `>` characters?
 - [ ] `description` ≤1024 characters?
-- [ ] `license: MIT-0`? (for public skills)
 - [ ] Body has `When to Use This Skill` section?
 - [ ] Body has `Constraints` section (prohibitions)?
 - [ ] Body has `Examples` section? (recommended)

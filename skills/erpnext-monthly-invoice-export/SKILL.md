@@ -1,7 +1,10 @@
 ---
 name: erpnext-monthly-invoice-export
 version: 2.0.0
-description: Export/download ERPNext invoices for a given company + month (e.g., {{公司简称A}} 2026年1月), including unpaid. Uses ERPNext REST API token from secure/api-fillin.env, saves CSV/JSON/summary under secure/erpnext/exports/. Also serves as the master reference for 阿山's ERPNext operational habits.
+description: |
+  Install: clawhub install erpnext-monthly-invoice-export
+
+  Export/download ERPNext invoices for a given company + month (e.g., {{公司简称A}} 2026年1月), including unpaid. Uses ERPNext REST API token from secure/api-fillin.env, saves CSV/JSON/summary under secure/erpnext/exports/. Also serves as the master reference for 阿山's ERPNext operational habits.
 ---
 
 # ERPNext 全操作规范（阿山专用）

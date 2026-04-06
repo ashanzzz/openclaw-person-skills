@@ -1,10 +1,12 @@
 ---
 name: reconcile-output-format
-description: >
+description: |
+  Install: clawhub install reconcile-output-format
+
   财务核对结果的标准输出格式技能。定义 ERPNext 发票明细 vs 财务明细（银行/现金/应付）
   勾稽结果的表格呈现方式、列定义、匹配状态标注规则。
   支持三种分类：电汇、现金、应付。
-何时使用：用户说"输出格式"、"核对结果"、"匹配结果怎么写"时调用，或在任何对账结果输出前引用。
+  何时使用：用户说"输出格式"、"核对结果"、"匹配结果怎么写"时调用，或在任何对账结果输出前引用。
 ---
 
 # 财务核对结果输出格式

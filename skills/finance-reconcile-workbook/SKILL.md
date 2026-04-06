@@ -1,6 +1,8 @@
 ---
 name: finance-reconcile-workbook
-description: >
+description: |
+  Install: clawhub install finance-reconcile-workbook
+
   财务对账匹配模板生成技能。生成 A/B 双口径工作表（A=银行/现金实际出账, B=凭证/发票口径），
   并与 ERPNext 采购发票明细勾稽；识别 ERPNext 自定义字段 custom_guige_xinghao / custom_备注 / custom_明细摘要；
   结果回传 DSM（Synology）WebDAV：homes/<user>/财务/对账/<公司>/<YYYYMM>/。

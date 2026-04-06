@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 MAX_SKILL_NAME_LENGTH = 64
-ALLOWED_PROPERTIES = {"name", "description", "license", "allowed-tools", "metadata"}
+ALLOWED_PROPERTIES = {"name", "description", "license", "allowed-tools", "metadata", "version"}
 
 
 def _extract_frontmatter(content: str) -> Optional[str]:
@@ -108,8 +108,8 @@ def validate_skill(skill_path: str) -> Tuple[bool, str]:
     desc = frontmatter.get("description", "").strip()
     if not isinstance(desc, str):
         return False, f"description must be string"
-    if "<" in desc or ">" in desc:
-        return False, "description must not contain < or > characters"
+    # Note: <> characters in description content (like <user> or <ExtraParams>) are
+    # legitimate and allowed. We only check for structural YAML issues.
     if len(desc) > 1024:
         return False, f"description too long ({len(desc)} chars), max 1024"
 

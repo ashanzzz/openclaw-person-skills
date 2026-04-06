@@ -1,9 +1,11 @@
 ---
 name: finance-remark-mapping
-description: >
+description: |
+  Install: clawhub install finance-remark-mapping
+
   财务账单备注规范化技能。将财务原始账单中的摘要和备注，
   转化为 ERPNext 物料/备注的标准写法。
-何时使用：用户说"分析这个账单"、"形成规范化"、"教我怎么写备注"时调用。
+  何时使用：用户说"分析这个账单"、"形成规范化"、"教我怎么写备注"时调用。
 ---
 
 # 财务备注规范化

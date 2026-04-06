@@ -1,10 +1,12 @@
 ---
 name: purchase-invoice-classifier
-description: >
+description: |
+  Install: clawhub install purchase-invoice-classifier
+
   采购发票四级分类技能。将 ERPNext 采购发票（Purchase Invoice）按付款方式和发票号码格式
   分为四级：电汇 / 现金 / 无发票 / 未付款，同时以「每行一个物料明细」的方式输出完整台账。
   用于月度财务核对、采购汇总、发票清理等场景。
-何时使用：用户说"分类/汇总/整理采购发票"、"按电汇现金分开"、"对账"、"清理无发票"时调用。
+  何时使用：用户说"分类/汇总/整理采购发票"、"按电汇现金分开"、"对账"、"清理无发票"时调用。
 ---
 
 # 采购发票四级分类技能
