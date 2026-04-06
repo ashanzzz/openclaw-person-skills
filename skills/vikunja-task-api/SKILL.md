@@ -1,12 +1,113 @@
 ---
 name: vikunja-task-api
-version: 2.1.0
+version: 2.2.0
 description: Full Vikunja v2 API integration — projects, tasks, labels, teams, views, comments, attachments, bulk operations, and more.
 homepage: https://vikunja.io/
 metadata: {"clawdbot":{"emoji":"📋","requires":{"bins":["curl","jq"],"env":["VIKUNJA_URL"],"optionalEnv":["VIKUNJA_TOKEN","VIKUNJA_USERNAME","VIKUNJA_PASSWORD"]},"primaryEnv":"VIKUNJA_TOKEN"}}
 ---
 
-# Vikunja Task API Skill (v2 / v2.2.2)
+# Vikunja Task API Skill
+
+## Installation (AI Agent / OpenClaw)
+
+### 1. Set Environment Variables
+
+In your OpenClaw workspace, add to `secure/api-fillin.env`:
+
+```bash
+VIKUNJA_URL=http://your-vikunja-instance:3456
+VIKUNJA_TOKEN=tk_xxxxxxxxxxxxx   # Optional: API token (recommended)
+# VIKUNJA_USERNAME=your_username  # Optional: for login-based auth
+# VIKUNJA_PASSWORD=your_password  # Optional: for login-based auth
+```
+
+### 2. Verify Connectivity
+
+```bash
+curl -s $VIKUNJA_URL/api/v1/info | jq
+```
+
+### 3. Install via ClawHub (if available)
+
+```bash
+clawhub install vikunja-task-api
+```
+
+Or manually clone into your skills directory:
+
+```bash
+git clone https://github.com/ashanzzz/openclaw-person-skills.git
+export CLAWHUB_WORKDIR=$(pwd)/openclaw-person-skills
+```
+
+---
+
+## Installation (Human User)
+
+### Prerequisites
+
+- **Vikunja instance** (self-hosted or cloud) — get it at https://vikunja.io/download
+- **API token** from Vikunja: Settings → API Tokens → Create new token
+- **curl** and **jq** installed on your system
+
+### Setup Steps
+
+**Step 1: Get your Vikunja URL**
+
+Note your Vikunja instance base URL, e.g.:
+- Self-hosted: `http://192.168.1.100:3456`
+- Cloud: `https://vikunja.example.com`
+
+**Step 2: Generate an API Token**
+
+1. Log in to Vikunja
+2. Go to **Settings → API Tokens**
+3. Click **Create new token**
+4. Copy the token (starts with `tk_`)
+
+**Step 3: Test the Connection**
+
+```bash
+export VIKUNJA_URL="http://your-vikunja-instance:3456"
+export VIKUNJA_TOKEN="tk_your_token_here"
+
+# Test (should return instance info)
+curl -s "$VIKUNJA_URL/api/v1/info" | jq
+
+# List your projects
+curl -s "$VIKUNJA_URL/api/v1/projects" \
+  -H "Authorization: Bearer $VIKUNJA_TOKEN" | jq '.[] | {id,title}'
+```
+
+**Step 4: Optional — Install the Helper Script**
+
+Save `vikunja.sh` to a directory in your PATH for convenient CLI access:
+
+```bash
+curl -sL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/vikunja-task-api/vikunja.sh \
+  -o /usr/local/bin/vikunja && chmod +x /usr/local/bin/vikunja
+```
+
+Then configure:
+
+```bash
+echo 'export VIKUNJA_URL="http://your-vikunja-instance:3456"' >> ~/.bashrc
+echo 'export VIKUNJA_TOKEN="tk_your_token"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Usage examples:
+
+```bash
+vikunja list                    # List all open tasks
+vikunja due-today               # Tasks due today
+vikunja create 9 "New task"    # Create task in project 9
+vikunja done 123                # Mark task 123 as done
+vikunja show 123                # Show task details
+```
+
+---
+
 
 Use Vikunja as the **source of truth** for all task management. This skill supersedes any internal working-buffer tracking for user-visible tasks.
 
