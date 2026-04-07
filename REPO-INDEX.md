@@ -1,6 +1,6 @@
 # Repository Index
 
-最后更新：2026-04-06
+最后更新：2026-04-07
 
 ## 1) Repository Policy
 
@@ -33,6 +33,7 @@
 | `skills/reconcile-output-format` | 对账输出格式化 |
 | `skills/skill-creator` | OpenClaw Skill 创建/编辑/审核完整指南（，六步流程+工具脚本+渐进式披露原则） |
 | `skills/vikunja-task-api` | Vikunja API 任务管理 |
+| `skills/business-analysis` | 商业分析Skill：四轮验证+十二维分析+数据源URL+报告模板 |
 
 ## 3) Runtime data placement (outside this repo)
 
