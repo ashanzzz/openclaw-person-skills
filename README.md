@@ -12,34 +12,38 @@
 clawhub install ashanzzz-vikunja-task-api
 clawhub install ashanzzz-deep-research
 clawhub install ashanzzz-skill-vetter
-clawhub install ashanzzz-unraidclaw
 ```
 
 ### Or Install All at Once
 
 ```bash
-for SKILL in vikunja-task-api deep-research skill-vetter unraidclaw proactivity self-improving books-growth-advisor; do
+for SKILL in vikunja-task-api deep-research skill-vetter proactivity self-improving books-growth-advisor erpnext-invoice-detail-export erpnext-monthly-invoice-export erpnext-account-report business-analysis; do
     clawhub install ashanzzz-$SKILL 2>/dev/null || echo "⚠ $SKILL not yet on ClawHub"
 done
 ```
 
----
-
-## Available Skills
+### Individual Skills
 
 | Skill | ClawHub Install | Description |
 |-------|----------------|-------------|
 | `vikunja-task-api` | `clawhub install ashanzzz-vikunja-task-api` | Full Vikunja v2 API integration |
 | `deep-research` | `clawhub install ashanzzz-deep-research` | 8-step research methodology |
 | `skill-vetter` | `clawhub install ashanzzz-skill-vetter` | Security vetting before installing skills |
-| `unraidclaw` | `clawhub install ashanzzz-unraidclaw` | Unraid server management |
-| `proactivity` | *(pending ClawHub publish)* | Proactive agent behavior |
-| `self-improving` | *(pending ClawHub publish)* | Self-reflection + learning |
-| `books-growth-advisor` | *(pending ClawHub publish)* | Management classics advisor |
-| `erpnext-*` | *(pending ClawHub publish)* | ERPNext integrations |
-| `finance-*` | *(pending ClawHub publish)* | Financial reconciliation |
-| `news-tracker` | *(pending ClawHub publish)* | News tracking |
-| `book-*` | *(pending ClawHub publish)* | Book knowledge pipeline |
+| `erpnext-invoice-detail-export` | `clawhub install erpnext-invoice-detail-export` | ERPNext 发票明细导出：按发票号导出含规格型号/备注的明细 |
+| `erpnext-monthly-invoice-export` | `clawhub install erpnext-monthly-invoice-export` | ERPNext 月度发票导出：按公司+月份导出采购发票 |
+| `erpnext-account-report` | *(自建技能)* | ERPNext 账单导出：GL→PE→PI→物料自动勾稽，每行一个物料明细 |
+| `business-analysis` | *(自建技能)* | 商业分析：四轮验证+十二维分析+数据源URL |
+| `books-growth-advisor` | *(自建技能)* | 基于9本管理书回答职业发展/工厂/管理/人际问题 |
+| `proactivity` | *(自建技能)* | 主动工作流：预判需求、主动巡检 |
+| `self-improving` | *(自建技能)* | 自学习：捕获错误与纠正 |
+| `skill-creator` | *(自建技能)* | Skill 创建/编辑/审核完整指南 |
+| `purchase-invoice-classifier` | *(自建技能)* | 采购发票分类 |
+| `purchase-wire-transfer-reconcile` | *(自建技能)* | 采购电汇对账 |
+| `finance-reconcile-workbook` | *(自建技能)* | 财务对账工作簿 |
+| `finance-remark-mapping` | *(自建技能)* | 财务备注映射 |
+| `book-learner` | *(自建技能)* | 图书切片阅读与笔记生成 |
+| `book-audit` | *(自建技能)* | 图书笔记完整性复核 |
+| `news-tracker` | *(自建技能)* | 新闻跟踪 |
 
 Browse all on ClawHub: https://clawhub.ai/ashanzzz
 
@@ -50,44 +54,16 @@ Browse all on ClawHub: https://clawhub.ai/ashanzzz
 If `clawhub install` is unavailable, use curl:
 
 ```bash
-SKILL_NAME=vikunja-task-api
+# Example: erpnext-account-report
+SKILL_NAME=erpnext-account-report
 mkdir -p ~/.openclaw/workspace/skills/$SKILL_NAME
 curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/$SKILL_NAME/SKILL.md \
   -o ~/.openclaw/workspace/skills/$SKILL_NAME/SKILL.md
-```
-
-> **IMPORTANT:** Use `curl`, NOT WebFetch. WebFetch strips formatting and critical details.
-
----
-
-## For AI Agents: Install Single Skill
-
-```bash
-# Primary: use clawhub
-clawhub install ashanzzz-[skill-name]
-
-# Fallback: curl
-curl -fsSL https://raw.githubusercontent.com/ashanzzz/openclaw-person-skills/main/skills/[skill-name]/INSTALL.md
-# Then follow the step-by-step instructions in the file
-```
-
----
-
-## For AI Agents: Detect Installed Skills
-
-```bash
-for DIR in ~/.openclaw/workspace/skills/*/; do
-    if [ -f "$DIR/SKILL.md" ]; then
-        NAME=$(basename "$DIR")
-        VER=$(grep "^version:" "$DIR/SKILL.md" 2>/dev/null | cut -d: -f2 | tr -d ' ' || echo "unknown")
-        echo "  ✓ $NAME (v$VER)"
-    fi
-done
 ```
 
 ---
 
 ## Repository Scope
 
-**Contains:** Skill本体 (`SKILL.md`), scripts, references, installation guides (`INSTALL.md`)
+**Contains:** Skill本体 (`SKILL.md`), scripts, references, installation guides
 **Does NOT contain:** Runtime data, ebook content, caches
