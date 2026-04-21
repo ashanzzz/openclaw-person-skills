@@ -36,6 +36,7 @@
 | `skills/skill-vetter` | 安装外部技能前必做的 RED FLAGS 安全审核 | 本地自建 |
 | `skills/vikunja-task-api` | 完整 Vikunja v2 API 集成：项目/任务/标签/团队/视图/评论 | 本地自建 |
 | `skills/repo-structure-manager` | 仓库目录治理、清理、发布边界控制 | 本地自建 |
+| `skills/work-tracker` | 主动工作追踪：未完成/已完成/跟进/预判，基于 Vikunja + Hermes cron | 本地自建 |
 
 ## 3) Runtime Data Placement (outside this repo)
 
